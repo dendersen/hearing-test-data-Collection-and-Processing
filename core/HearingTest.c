@@ -11,7 +11,7 @@
 
 void playtone(){
   SETBITS(PORTB,BIT(1)|BIT(2));
-  _delay_ms(0.0306);
+  _delay_ms(0.1);
   PORTB = 0;
-  _delay_ms(0.0306);
+  _delay_ms(0.1);
 }

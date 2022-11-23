@@ -20,3 +20,7 @@ def Change_Dataform():
       #append data frame to CSV file
       df.to_csv('NewResultStorage.csv', mode='a', index=False, header=False)
 
+def Clear_Data():
+  f = open("NewResultStorage.csv","w")
+  f.write("ID,Frekvens,Out,Response,AnswerTime\n")
+  f.close()

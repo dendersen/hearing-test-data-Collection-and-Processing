@@ -1,5 +1,6 @@
 #include "HearingTest.c"
 #include "USB_connection.c"
+#include "stdio.h"
 
 
 
@@ -32,9 +33,14 @@ int main(int argc, char const *argv[]){
 			playtone(tonePlaying);
 		}
 		
-		if(currentBufferIndex != 0 && currentData[currentBufferIndex-1] == ';'){
+		if(currentBufferIndex != 0 && currentData[currentBufferIndex-1] == ';'){ // når vi er nået slutningen af beskeden
+			int i;
+			int newTone = 0;
+			// for (i=0; i<currentBufferIndex-1;i++){
+			// 	newTone += stoi(currentData[i]);
+				
+			// }
 			tx_serial(currentData);
-			//tx_serial_number(currentBufferIndex);
 			currentBufferIndex=0;
 		}
 		
@@ -52,11 +58,8 @@ void init(){
 ISR(USART_RX_vect){
 	// UDR0 er dataen som bliver modtaget af microposesoren
 	// den bliver gemt en char af gangen
-	//måske tilføj noget med:
 	currentData[currentBufferIndex] = UDR0;
 	currentBufferIndex++; 
-	
-
 }
 
 void riteBuffer(){

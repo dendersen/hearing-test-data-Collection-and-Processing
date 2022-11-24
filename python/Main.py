@@ -4,4 +4,5 @@ import USB.USB_protocol as USB
 def main():
   pass
 
-USB.sendMesege("1234")
+while 1:
+ USB.sendMesege("1234")

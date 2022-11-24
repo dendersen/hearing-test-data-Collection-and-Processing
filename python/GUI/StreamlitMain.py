@@ -1,8 +1,10 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+table = pd.read_csv('ID_collection.csv')
+
 def save_data():
-  data = {'ID': [1],
+  data = {'ID': [1+table['ID'].max()],
             'Gender': [Gender],
             'Age': [Age],
             'HearingLoss': [HearingLoss],
@@ -44,6 +46,8 @@ with col2:
   if Starter:
     st.write('Test has been started :smile:')
     save_data()
+  st.write(table)
+  st.button('Refresh data')
 
 
 

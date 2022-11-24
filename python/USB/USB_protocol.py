@@ -28,13 +28,22 @@ def sendMesege(number):
     print("Til MCU - data: " , text,"\n")
 
     for char in text:
-        ser.write(char.encode()) # send en char af gangen til MCU
+        ser.write(char.encode("utf-8")) # send en char af gangen til MCU
 
     time.sleep(0.5)
     
     while 1:
-        resevedText=str(ser.read().decode("utf-8",errors='replace')) # reseave text from MCU
-
+        temp = ser.read()
+        try:
+            resevedText=str(temp.decode("utf-8",errors='strict')) # reseave text from MCU
+        except:
+            try:
+                resevedText=str(temp.decode("ascii",errors="ignore"))
+            except:
+                resevedText = str(temp)
+                pass
+            pass
+        print (resevedText)
         if resevedText == ";":
             break
         else:
@@ -43,7 +52,7 @@ def sendMesege(number):
     if line + endingChar != text:
         print ("fail")
 
-    print("Fra MCU - data:",line,"\n") 
+    print("Fra MCU - data:",line,"\n",numberFrom16Bit(line[0])) 
     ser.reset_input_buffer()
     
     

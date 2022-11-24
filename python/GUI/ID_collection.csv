@@ -1,4 +1,2 @@
-ID,Gender,Age,HearingLoss,HeadphoneTime,PlaceOfTest,Name
-1,Man,18,do not have hearingLoss,4,Classroom,Niels
-
-2,Man,0,have been diagnosed with hearingLoss,0,,
+ID,Name,Gender,Age,HearingLoss,HeadphoneTime,PlaceOfTest
+1,Niels,Man,18,do not have hearingLoss,4,Classroom

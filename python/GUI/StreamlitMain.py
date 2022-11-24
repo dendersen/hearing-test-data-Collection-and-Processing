@@ -1,16 +1,16 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
+import csv
 table = pd.read_csv('ID_collection.csv')
 
 def save_data():
   data = {'ID': [1+table['ID'].max()],
-            'Gender': [Gender],
-            'Age': [Age],
-            'HearingLoss': [HearingLoss],
-            'HeadphoneTime': [HeadphoneTime],
-            'PlaceOfTest': [PlaceOfTest],
-            'Name': [Name]}
+          'Name': [Name],
+          'Gender': [Gender],
+          'Age': [Age],
+          'HearingLoss': [HearingLoss],
+          'HeadphoneTime': [HeadphoneTime],
+          'PlaceOfTest': [PlaceOfTest]}
   df = pd.DataFrame(data)
   df.to_csv('ID_collection.csv', mode='a', index=False, header=False)
 
@@ -32,6 +32,10 @@ with col1:
     'Select a range of frequency',
     0.0, 20000.0, value=(Start,Slut))
   st.write('Values:', values)
+  Starter = st.button('Start test')
+  if Starter:
+    st.write('Test has been started :smile:')
+    save_data()
 with col2:
   st.header('See output')
   st.write('Currently getting data from: ',Name)
@@ -42,10 +46,6 @@ with col2:
   st.write('The one in question ',HearingLoss)
   st.write(Name,' uses the headphone: ',HeadphoneTime,'hour/day')
   st.write('The test is taken at: ',PlaceOfTest)
-  Starter = st.button('Start test')
-  if Starter:
-    st.write('Test has been started :smile:')
-    save_data()
   st.write(table)
   st.button('Refresh data')
 

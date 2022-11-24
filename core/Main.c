@@ -20,8 +20,6 @@ float tonePlaying = 100;
 
 volatile int currentBufferIndex = 0;
 
-volatile char test[] = {'1','2','3',';'};
-
 int main(int argc, char const *argv[]){
 	DDRB = 0x06;
 	PORTB = 0x06;
@@ -35,12 +33,22 @@ int main(int argc, char const *argv[]){
 		
 		if(currentBufferIndex != 0 && currentData[currentBufferIndex-1] == ';'){ // når vi er nået slutningen af beskeden
 			int i;
+			int j;
 			int newTone = 0;
-			// for (i=0; i<currentBufferIndex-1;i++){
-			// 	newTone += stoi(currentData[i]);
-				
-			// }
-			tx_serial(currentData);
+			int newDigit = 0;
+			 for (i=currentBufferIndex-2; i>-1 ;i--){
+			  	newDigit = (int)(currentData[i]-48);
+				tx_serial("hillo from MCU one digit is:");
+				tx_serial_number(newDigit);
+				tx_serial("\n");
+				// for(j = 0; j < i-currentBufferIndex-2; j++){
+				// 	newDigit == newDigit * 10;
+				// }
+				newTone += newDigit;
+			
+			 }
+			//tx_serial_number(newTone);
+			tx_serial(";");
 			currentBufferIndex=0;
 		}
 		

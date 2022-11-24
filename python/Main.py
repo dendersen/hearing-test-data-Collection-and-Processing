@@ -5,4 +5,4 @@ def main():
   pass
 
 while 1:
- USB.sendMesege(1234)
+ USB.sendMesege("1234")

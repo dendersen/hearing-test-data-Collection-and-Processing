@@ -31,9 +31,9 @@ def sendMesege(number):
         ser.write(char.encode()) # send en char af gangen til MCU
 
     time.sleep(0.5)
-
+    
     while 1:
-        resevedText=str(ser.read().decode()) # reseave text from MCU
+        resevedText=str(ser.read().decode("utf-8",errors='replace')) # reseave text from MCU
 
         if resevedText == ";":
             break

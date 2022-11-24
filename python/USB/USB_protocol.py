@@ -1,6 +1,7 @@
 import time
 import serial
 import codecs
+from USB.integerSplit import numberTo16Bit,numberFrom16Bit
 
 
 ser = serial.Serial(
@@ -20,7 +21,8 @@ endingChar=";"
 ser.reset_input_buffer()
 
 
-def sendMesege(text):
+def sendMesege(number):
+    text = numberTo16Bit(number)
     text += ";"
     line = ""
     print("Til MCU - data: " , text,"\n")

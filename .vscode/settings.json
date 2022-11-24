@@ -1,5 +1,7 @@
 {
   "files.associations": {
-    "Main.C": "cpp"
+    "Main.C": "cpp",
+    "usb_connection.c": "cpp",
+    "hearingtest.c": "cpp"
   }
 }

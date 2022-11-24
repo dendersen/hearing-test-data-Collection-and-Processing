@@ -9,9 +9,22 @@
 #include <avr/io.h>
 #include <util/delay.h>
 
-void playtone(){
+void initTonePlayer(){
+  DDRB = 0x06;
+}
+
+void playtone(float tone){
   SETBITS(PORTB,BIT(1)|BIT(2));
-  _delay_ms(0.1);
+  int delay = (1/tone*1000) / 0.1 /2;
+  int i;
+  for (i = 0; i < delay; i++){
+    _delay_ms(0.1);
+  }
+  
   PORTB = 0;
-  _delay_ms(0.1);
+  
+  for (i = 0; i < delay; i++){
+    _delay_ms(0.1);
+  }
+  
 }

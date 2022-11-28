@@ -16,44 +16,49 @@
 #define BITVAL(x,y) (((x)>>(y)) & 1)
 #define HERTZ(x) ((CPU_CLOCK/400)/2)
 
-float tonePlaying = 100;	
+float tonePlaying = 500;	
 
 volatile int currentBufferIndex = 0;
 
 int main(int argc, char const *argv[]){
 	DDRB = 0x06;
 	PORTB = 0x06;
-	//initTonePlayer();
   	init();
 
   	while(1){
-		if(tonePlaying != 0){
-			playtone(tonePlaying);
-		}
-		
+
+
+		playtone(1<<10,27);
+	
 		if(currentBufferIndex != 0 && currentData[currentBufferIndex-1] == ';'){ // når vi er nået slutningen af beskeden
-			int i;
-			int j;
-			int newTone = 0;
-			int newDigit = 0;
-			 for (i=currentBufferIndex-2; i>-1 ;i--){
-			  	newDigit = (int)(currentData[i]-48);
-				tx_serial("hillo from MCU one digit is:");
-				tx_serial_number(newDigit);
-				tx_serial("\n");
-				// for(j = 0; j < i-currentBufferIndex-2; j++){
-				// 	newDigit == newDigit * 10;
-				// }
-				newTone += newDigit;
 			
-			 }
-			//tx_serial_number(newTone);
-			tx_serial(";");
+			char numbers[2] = {'1','2'};
+			charListToNumber(numbers,2);
+//			tx_serial(";");
 			currentBufferIndex=0;
 		}
 		
   	}
  	return 0;
+}
+
+void charListToNumber(char number[], uint8_t lenghOfArray){
+	// denne kode skal ændres så den oversætter den liste som der bliver givet som agument
+	// isedet for at den oversætter currentBufferIndex
+	uint8_t i;
+	uint8_t fullNumber = 0;
+	uint8_t newDigit = 0;
+	for (i=lenghOfArray-1; i>-1 ;i--){
+		newDigit = (uint8_t)(number[i]-48);
+		uint8_t j = 0;
+		for(j = 0; j < lenghOfArray-1-i; j++){
+		 	newDigit = newDigit * 10;
+		}
+		fullNumber += newDigit;	
+	}
+	tx_serial("the new mesege is:");
+	tx_serial_number(fullNumber);
+	tx_serial(";");
 }
 
 void init(){
@@ -76,4 +81,6 @@ void riteBuffer(){
 	tx_serial(currentData);
 	tx_serial(" ;");
 }
+
+
 	

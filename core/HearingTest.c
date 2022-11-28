@@ -9,22 +9,26 @@
 #include <avr/io.h>
 #include <util/delay.h>
 
-void initTonePlayer(){
-  DDRB = 0x06;
+void delayer(uint16_t mik,uint8_t d);
+
+void playtone(uint16_t mik,uint8_t d){
+  SETBITS(PORTB,BIT(1)|BIT(2));
+  delayer(mik,d);
+
+  PORTB &= 0;
+ 
+  delayer(mik,d);
 }
 
-void playtone(float tone){
-  SETBITS(PORTB,BIT(1)|BIT(2));
-  int delay = (1/tone*1000) / 0.1 /2;
-  int i;
-  for (i = 0; i < delay; i++){
-    _delay_ms(0.1);
-  }
-  
-  PORTB = 0;
-  
-  for (i = 0; i < delay; i++){
-    _delay_ms(0.1);
-  }
-  
+void delayer(uint16_t mik,uint8_t d){
+    uint8_t i = 0;
+    uint16_t y = 0b1;
+    while(i!=d || y!= mik){
+        _delay_us(1);
+        y=y<<1;
+        if(y==0b0){
+            y |= 0b1;
+            i++;
+       }
+    }
 }

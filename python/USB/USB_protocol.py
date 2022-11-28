@@ -39,9 +39,6 @@ def sendMesege(text):
         else:
             line += resevedText # adds the new text to the line
 
-    if line + endingChar != text:
-        print ("fail")
-
     print("Fra MCU - data:",line,"\n") 
     ser.reset_input_buffer()
     

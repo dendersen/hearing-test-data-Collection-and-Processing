@@ -28,12 +28,13 @@ int main(int argc, char const *argv[]){
   	while(1){
 
 
-		playtone(1<<10,27);
+		playtone(1<<10,10);
 	
 		if(currentBufferIndex != 0 && currentData[currentBufferIndex-1] == ';'){ // når vi er nået slutningen af beskeden
-			
-			char numbers[2] = {'1','2'};
-			charListToNumber(numbers,2);
+			tx_serial("dette er dit svar");
+			tx_serial(";");
+			//char numbers[2] = {'1','2'};
+			//charListToNumber(numbers,2);
 //			tx_serial(";");
 			currentBufferIndex=0;
 		}

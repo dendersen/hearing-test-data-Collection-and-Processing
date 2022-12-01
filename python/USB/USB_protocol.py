@@ -1,11 +1,11 @@
 import time
 import serial
 import codecs
-from USB.integerSplit import numberTo16Bit,numberFrom16Bit
+#from USB.integerSplit import numberTo16Bit,numberFrom16Bit
 
 
-ser = serial.Serial(
-        port='COM5',
+ser = serial.Serial( 
+        port='COM5', #COM5
         baudrate = 9600,
         parity=serial.PARITY_NONE,
         stopbits=serial.STOPBITS_ONE,

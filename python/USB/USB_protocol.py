@@ -41,5 +41,3 @@ def sendMesege(text):
 
     print("Fra MCU - data:",line,"\n") 
     ser.reset_input_buffer()
-    
-    

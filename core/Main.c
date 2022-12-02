@@ -24,8 +24,6 @@ volatile uint8_t playingSound = 0;
 int charListToNumber(char number[], int lenghOfArray);
 
 int main(int argc, char const *argv[]){
-	// DDRB = 0x06;// bit 1 og 2 er output til høretelefonerne
-	// DDRC = 0x00;// bit 0 og 1 er input fra knapperne
 	DDRB = 0x06;// bit 1 og 2 er output til høretelefonerne
 	DDRC = 0x00; // bit 0 og 1 er input fra knapperne
 
@@ -41,10 +39,36 @@ int main(int argc, char const *argv[]){
 
 		playtone(1<<firstDigit,secondDigit);
 
-		// if(PORTC & BIT(0) == 0b01 || (PORTC & BIT(1)) >> 1 == 0b01){
-		// 	// hvis dette kode køre, er der trykket på en knap og lyd bliver spillet
-		// 	tx_serial("Tillyke en knap er blevet trykket på! \n");
-		// }
+		if(playingSound && bit_is_set(PINC,PC0)|| bit_is_set(PINC,PC1)){
+			// hvis dette kode køre, er der trykket på en knap og lyd bliver spillet
+			uint8_t blueIsPresed = 0;
+			uint8_t yellowIsPresed = 0;
+			uint16_t i;
+			for(i = 0; i < 500; i++){
+				if(bit_is_set(PINC,PC0)){
+					blueIsPresed = 0x01;
+				}
+				if(bit_is_set(PINC,PC1)){
+					yellowIsPresed = 0x01;
+				}
+				_delay_ms(1);
+			}
+
+			tx_serial_number(blueIsPresed);
+			tx_serial_number(yellowIsPresed);
+			tx_serial(";");
+
+			// tx_serial("Tillyke en knap er blevet trykket på! \n");
+			// tx_serial("firstDigit er: ");
+			// tx_serial_number(firstDigit);
+			// tx_serial("\n second digit er: ");
+			// tx_serial_number(secondDigit);
+			// tx_serial("\n chosen ear er: ");
+			// tx_serial_number(chosenEar);
+			// tx_serial(";");
+			playingSound = 0x00;
+			earBeingPlayed = 0x00;
+		}
 	
 		if(currentBufferIndex != 0 && currentData[currentBufferIndex-1] == ';'){ // når vi er nået slutningen af beskeden
 
@@ -67,14 +91,6 @@ int main(int argc, char const *argv[]){
 			earBeingPlayed = chosenEar << 1;
 
 			playingSound = 1;
-
-			tx_serial("firstDigit er: ");
-			tx_serial_number(firstDigit);
-			tx_serial("\n second digit er: ");
-			tx_serial_number(secondDigit);
-			tx_serial("\n chosen ear er: ");
-			tx_serial_number(chosenEar);
-			tx_serial(";");
 			currentBufferIndex=0;
 		}
 		

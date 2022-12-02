@@ -21,7 +21,7 @@ def generateFrequency(inputFrequency:float)->tuple[float,str]:
     output = inputFrequency* t_high
   else:
     output = inputFrequency * t_low
-  a = round(output)
+  a = round((1/output*1000)/0.001/4)
   
   seconDigit = (a-(a%16))/16
   firstDigit = a%16

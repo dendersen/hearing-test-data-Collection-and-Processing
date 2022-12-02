@@ -1,5 +1,6 @@
 import USB.USB_protocol as USB
 import time 
+import USB.integerSplit as inS
 
 
 def main():
@@ -7,12 +8,11 @@ def main():
 
 tone = 100
 
+inS.generateFrequency(1000,3)
+
 while(1):
-  USB.sendMesege("10027")
+  USB.sendMesege(inS.generateFrequency(1000,3)[1])
   time.sleep(2.4)
 
-# while (1):
-#   USB.sendMesege(str(tone))
-#   time.sleep(1)
-#   tone += 100
+
 

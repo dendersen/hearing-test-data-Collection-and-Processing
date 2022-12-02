@@ -29,12 +29,12 @@ def generateFrequency(inputFrequency:float)->tuple[float,str]:
   second = str(seconDigit) # 2
   first = str(firstDigit) # 3
   
-  while len(second) < 2:
+  while len(second) < 3:
     second = "0" + second
-  while len(first) < 3:
+  while len(first) < 2:
     first = "0" + first
   
-  if len(second) != 2 or len(first) != 3:
+  if len(second) != 3 or len(first) != 2:
     raise Exception("length problems")
   print((output,first+second))
   return (output,first+second)

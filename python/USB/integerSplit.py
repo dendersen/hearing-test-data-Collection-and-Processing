@@ -36,11 +36,21 @@ def generateFrequency(inputFrequency:float,earID:int)->tuple[float,str]:
   
   if len(second) != 3 or len(first) != 2:
     raise Exception("length problems")
-  print((output,first+second+str(earID)))
-  return (output,first+second+str(earID))
-
-def delayFunctionality(delay:str):
-  first = delay[0:3]
-  second = delay[3:5]
   
-  pass
+  delayVar = first+second+str(earID)
+  output = delayFunctionality(delayVar)
+  
+  print((output,delayVar))
+  return (output,delayVar)
+
+def delayFunctionality(delay:str) -> float:
+  first = int(delay[0:3])
+  second = int(delay[3:5])
+  delay_us = first+second*16 #ns
+  
+  frequecy = 1000 / (delay_us * 4 * 0.001)
+  
+  print(frequecy)
+  return frequecy
+
+generateFrequency(1000,3)[1]

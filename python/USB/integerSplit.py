@@ -55,6 +55,11 @@ def delayFunctionality(delay:str) -> float:
   c = d*16+M
   frequency = 250000/c
   
-  return frequency
+  output =(-frequency+t_low_B)/t_low_A 
+  if output > splitPoint :
+    output =(-frequency+t_high_B)/t_high_A 
+  
+  print("unajusted:",frequency,"\nadjusted:",output)
+  return output
 
 generateFrequency(1000,3)[1]

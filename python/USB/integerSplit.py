@@ -36,7 +36,7 @@ def generateFrequency(inputFrequency:float)->tuple[float,str]:
   
   if len(second) != 2 or len(first) != 3:
     raise Exception("length problems")
-  
+  print((output,first+second))
   return (output,first+second)
 
 def delayFunctionality(delay:str):

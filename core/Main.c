@@ -20,22 +20,49 @@ float tonePlaying = 500;
 
 volatile int currentBufferIndex = 0;
 
+int charListToNumber(char number[], int lenghOfArray);
+
 int main(int argc, char const *argv[]){
 	DDRB = 0x06;
 	PORTB = 0x06;
   	init();
 
+	uint16_t firstDigit = 15;
+	uint8_t secondDigit = 60;
+	uint8_t chosenEar = 0;
+
   	while(1){
 
 
-		playtone(1<<10,10);
+		playtone(1<<firstDigit,secondDigit);
 	
 		if(currentBufferIndex != 0 && currentData[currentBufferIndex-1] == ';'){ // når vi er nået slutningen af beskeden
-			tx_serial("dette er dit svar");
+
+			char firstDigitList[2];
+			char secondDigitList[3];
+			char chosenEarList[1];
+
+			firstDigitList[0] = currentData[0];
+			firstDigitList[1] = currentData[1];
+
+			secondDigitList[0] = currentData[2];
+			secondDigitList[1] = currentData[3];
+			secondDigitList[2] = currentData[4];
+
+			chosenEarList[0] = currentData[5];
+
+			firstDigit = (uint16_t) charListToNumber(firstDigitList,2);
+			secondDigit = (uint8_t) charListToNumber(secondDigitList,3);
+			chosenEar = (uint8_t) charListToNumber(chosenEarList,1);
+			earBeingPlayed = chosenEar << 1;
+
+			tx_serial("firstDigit er: ");
+			tx_serial_number(firstDigit);
+			tx_serial("\n second digit er: ");
+			tx_serial_number(secondDigit);
+			tx_serial("\n chosen ear er: ");
+			tx_serial_number(chosenEar);
 			tx_serial(";");
-			//char numbers[2] = {'1','2'};
-			//charListToNumber(numbers,2);
-//			tx_serial(";");
 			currentBufferIndex=0;
 		}
 		
@@ -43,23 +70,27 @@ int main(int argc, char const *argv[]){
  	return 0;
 }
 
-void charListToNumber(char number[], uint8_t lenghOfArray){
+int charListToNumber(char number[], int lenghOfArray){
 	// denne kode skal ændres så den oversætter den liste som der bliver givet som agument
 	// isedet for at den oversætter currentBufferIndex
-	uint8_t i;
-	uint8_t fullNumber = 0;
-	uint8_t newDigit = 0;
+	int i;
+	int fullNumber = 0;
+	int newDigit = 0;
 	for (i=lenghOfArray-1; i>-1 ;i--){
-		newDigit = (uint8_t)(number[i]-48);
-		uint8_t j = 0;
+		newDigit = (int)(number[i]-48);
+		int j = 0;
 		for(j = 0; j < lenghOfArray-1-i; j++){
 		 	newDigit = newDigit * 10;
 		}
 		fullNumber += newDigit;	
 	}
-	tx_serial("the new mesege is:");
-	tx_serial_number(fullNumber);
-	tx_serial(";");
+	return fullNumber;
+
+	// tx_serial_number(fullNumber);
+	// tx_serial(";");
+	// tx_serial("the new message is:");
+	// tx_serial_number(fullNumber);
+	// tx_serial(";");
 }
 
 void init(){

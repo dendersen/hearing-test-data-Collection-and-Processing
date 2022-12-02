@@ -10,7 +10,7 @@
 
 
 
-volatile char currentData[100];
+volatile char currentData[10];
 volatile uint8_t counter = 0;
 
 void init_seriel(){

@@ -12,7 +12,7 @@ int main(){
     DDRB = 0xFF;
 
     while (1){
-        playtone(125);
+        playtone(1<<4,125);
     }
 }
 

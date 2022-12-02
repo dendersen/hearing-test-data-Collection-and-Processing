@@ -19,12 +19,17 @@
 float tonePlaying = 500;	
 
 volatile int currentBufferIndex = 0;
+volatile uint8_t playingSound = 0;
 
 int charListToNumber(char number[], int lenghOfArray);
 
 int main(int argc, char const *argv[]){
-	DDRB = 0x06;
-	PORTB = 0x06;
+	// DDRB = 0x06;// bit 1 og 2 er output til høretelefonerne
+	// DDRC = 0x00;// bit 0 og 1 er input fra knapperne
+	DDRB = 0x06;// bit 1 og 2 er output til høretelefonerne
+	DDRC = 0x00; // bit 0 og 1 er input fra knapperne
+
+
   	init();
 
 	uint16_t firstDigit = 15;
@@ -35,6 +40,11 @@ int main(int argc, char const *argv[]){
 
 
 		playtone(1<<firstDigit,secondDigit);
+
+		// if(PORTC & BIT(0) == 0b01 || (PORTC & BIT(1)) >> 1 == 0b01){
+		// 	// hvis dette kode køre, er der trykket på en knap og lyd bliver spillet
+		// 	tx_serial("Tillyke en knap er blevet trykket på! \n");
+		// }
 	
 		if(currentBufferIndex != 0 && currentData[currentBufferIndex-1] == ';'){ // når vi er nået slutningen af beskeden
 
@@ -55,6 +65,8 @@ int main(int argc, char const *argv[]){
 			secondDigit = (uint8_t) charListToNumber(secondDigitList,3);
 			chosenEar = (uint8_t) charListToNumber(chosenEarList,1);
 			earBeingPlayed = chosenEar << 1;
+
+			playingSound = 1;
 
 			tx_serial("firstDigit er: ");
 			tx_serial_number(firstDigit);
@@ -94,7 +106,6 @@ int charListToNumber(char number[], int lenghOfArray){
 }
 
 void init(){
-	DDRB = 0x06;
 	init_seriel();
 	sei(); //global interrupt enable, global disable is: cli();
 }

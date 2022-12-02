@@ -9,9 +9,9 @@ def main():
 tone = 100
 
 
-# while(1):
-USB.sendMesege(inS.generateFrequency(5000,3)[1])
-  # time.sleep(5)
+while(1):
+  USB.sendMesege(inS.generateFrequency(5000,3)[1])
+  time.sleep(5)
   # USB.sendMesege(inS.generateFrequency(6000,3)[1])
   # time.sleep(5)
   # USB.sendMesege(inS.generateFrequency(5000,3)[1])

@@ -49,17 +49,12 @@ def generateFrequency(inputFrequency:float,earID:int)->tuple[float,str]:
   return (output,delayVar)
 
 def delayFunctionality(delay:str) -> float:
-  first = int(delay[0:3])
-  second = int(delay[3:5])
-  delay_us = first+second*16 #ns
+  M = int(delay[0:3]) 
+  d = int(delay[3:5]) 
   
-  frequecy = 1000 / (delay_us * 4 * 0.001)
+  c = d*16+M
+  frequency = 250000/c
   
-  if frequecy * t_low_A + t_low_B >= splitPoint:
-    frequecy = frequecy * t_high_A + t_low_A
-  else:
-    frequecy = frequecy * t_low_A + t_low_B
-  
-  return frequecy
+  return frequency
 
 generateFrequency(1000,3)[1]

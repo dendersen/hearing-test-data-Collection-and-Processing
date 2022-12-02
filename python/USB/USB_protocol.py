@@ -5,7 +5,7 @@ from USB.integerSplit import numberTo16Bit,numberFrom16Bit
 
 
 ser = serial.Serial(
-        port='COM5',
+        port='COM4',
         baudrate = 9600,
         parity=serial.PARITY_NONE,
         stopbits=serial.STOPBITS_ONE,
@@ -22,7 +22,7 @@ ser.reset_input_buffer()
 
 
 def sendMesege(number):
-    text = numberTo16Bit(number)
+    text = number
     text += ";"
     line = ""
     print("Til MCU - data: " , text,"\n")
@@ -40,10 +40,5 @@ def sendMesege(number):
         else:
             line += resevedText # adds the new text to the line
 
-    if line + endingChar != text:
-        print ("fail")
-
     print("Fra MCU - data:",line,"\n") 
     ser.reset_input_buffer()
-    
-    

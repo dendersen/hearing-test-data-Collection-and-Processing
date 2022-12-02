@@ -15,8 +15,8 @@ def numberFrom16Bit(text:str) -> int:
 numberFrom16Bit(numberTo16Bit(1234))
 
 def generateFrequency(inputFrequency:float,earID:int)->tuple[float,str]:
-  t_high = 1.73198537388486
-  t_low =  1.21478044977032
+  t_high = 1#.73198537388486
+  t_low =  1#.21478044977032
   if(inputFrequency >= 17000):
     output = inputFrequency* t_high
   else:

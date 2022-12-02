@@ -14,14 +14,18 @@ def numberFrom16Bit(text:str) -> int:
 
 numberFrom16Bit(numberTo16Bit(1234))
 
-t_high = 1#.73198537388486
-t_low =  1#.21478044977032
-splitPoint = 17000
+t_low_A  =     1.21589625967414872
+t_high_A =     1.15310355885438098
+t_low_B  = - 171.897515032615786
+t_high_B =  3005.17092789425988
+
+splitPoint = 16500
+
 def generateFrequency(inputFrequency:float,earID:int)->tuple[float,str]:
   if(inputFrequency >= splitPoint):
-    output = inputFrequency* t_high
+    output = inputFrequency* t_high_A+t_high_B
   else:
-    output = inputFrequency * t_low
+    output = inputFrequency * t_low_A + t_low_B
   a = round((1/output*1000)/0.001/4)
   
   seconDigit = (a-(a%16))/16
@@ -51,10 +55,10 @@ def delayFunctionality(delay:str) -> float:
   
   frequecy = 1000 / (delay_us * 4 * 0.001)
   
-  if frequecy * t_low >= splitPoint:
-    frequecy *= t_high
+  if frequecy * t_low_A + t_low_B >= splitPoint:
+    frequecy = frequecy * t_high_A + t_low_A
   else:
-    frequecy *= t_low
+    frequecy = frequecy * t_low_A + t_low_B
   
   return frequecy
 

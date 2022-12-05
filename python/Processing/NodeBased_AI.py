@@ -45,6 +45,28 @@ class Node:
   def setBias(self,bias:float):
     self.bias = bias
   
+  def randomizeBias(self,min:float, max:float,flip:bool):
+    """randomly changes the bias of this node
+    
+    
+    Args:
+      min (float): the minimum amount of change/min of change
+      max (float): the maximum amount of change/max of change
+      flip (bool): describes if the previus parameters describe the range in which the change may happen or the amount of change. use true for amount of change
+    
+    if flip is true min and max will be considered as their absolute values
+    """
+    if flip:
+      min = abs(min)
+      max = abs(max)
+      if randint(0,1) == 0:
+        self.bias -= min+random()*(max-min)
+      else:
+        self.bias += min+random()*(max-min)
+    else: # not flip
+      self.bias += min+random()*(max-min)
+    return
+  
   def __str__(self) -> str:
     return (f"{{{self.nodeLayer},{self.nodeID},{self.bias}}}")
   
@@ -56,9 +78,9 @@ class Node:
     
     
     Args:
-        min (float): the minimum amount of change/min of change
-        max (float): the maximum amount of change/max of change
-        flip (bool): describes if the previus parameters describe the range in which the change may happen or the amount of change. use true for amount of change
+      min (float): the minimum amount of change/min of change
+      max (float): the maximum amount of change/max of change
+      flip (bool): describes if the previus parameters describe the range in which the change may happen or the amount of change. use true for amount of change
     
     if flip is true min and max will be considered as their absolute values
     """
@@ -73,6 +95,8 @@ class Node:
     else: # not flip
       for i in self.weights:
         i += min+random()*(max-min)
+    return
+  
   def run(self):
     self.calculated = 0
     for i,w in enumerate(self.weights):

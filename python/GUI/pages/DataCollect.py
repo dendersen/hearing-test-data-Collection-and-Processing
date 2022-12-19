@@ -1,10 +1,11 @@
 import streamlit as st
 import pandas as pd
 import csv
-table = pd.read_csv('ID_collection.csv')
+
+IDInformation = pd.read_csv('python\GUI\ID_collection.csv')
 
 def save_data():
-  data = {'ID': [1+table['ID'].max()],
+  data = {'ID': [1+IDInformation['ID'].max()],
           'Name': [Name],
           'Gender': [Gender],
           'Age': [Age],
@@ -15,7 +16,6 @@ def save_data():
   df.to_csv('ID_collection.csv', mode='a', index=False, header=False)
 
 st.title('The bedst hearing test online:')
-
 col1, col2 = st.columns(2)
 with col1:
   st.header('Indput data here')
@@ -46,7 +46,8 @@ with col2:
   st.write('The one in question ',HearingLoss)
   st.write(Name,' uses the headphone: ',HeadphoneTime,'hour/day')
   st.write('The test is taken at: ',PlaceOfTest)
-  st.write(table)
+  st.write(IDInformation)
+  
   st.button('Refresh data')
 
 

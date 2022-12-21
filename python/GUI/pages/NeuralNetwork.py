@@ -136,8 +136,16 @@ if Run:
       plt.scatter(X_train[i,0],X_train[i,1],c="green")
     else:
       plt.scatter(X_train[i,0],X_train[i,1],c="black")
-  st.write('Model values')
+  st.write('Model values 2D')
   st.pyplot(plt.show())
+  if NFeatures == 2:
+    st.pyplot(plot2d_classif_model(X_train, y_train, X_test, y_test, model, annotate=False, figsize=(10,5)))
   #We show the facit
-  st.write('Real values')
-  st.pyplot(Scatter_plot(dtf_train,'Temp','Humidity','Y'))
+  st.write('Real values 2D')
+  RealValues = dtf_train.values
+  for i in range(len(RealValues)):
+    if RealValues[i,NFeatures] == 1:
+      plt.scatter(RealValues[i,0],RealValues[i,1],c="green")
+    else:
+      plt.scatter(RealValues[i,0],RealValues[i,1],c="black")
+  st.pyplot(plt.show())

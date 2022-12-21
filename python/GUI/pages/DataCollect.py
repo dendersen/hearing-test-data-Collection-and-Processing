@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import csv
 
-IDInformation = pd.read_csv('python\GUI\ID_collection.csv')
+IDInformation = pd.read_csv('Data\ID_collection.csv')
 
 def save_data():
   data = {'ID': [1+IDInformation['ID'].max()],
@@ -13,7 +13,7 @@ def save_data():
           'HeadphoneTime': [HeadphoneTime],
           'PlaceOfTest': [PlaceOfTest]}
   df = pd.DataFrame(data)
-  df.to_csv('ID_collection.csv', mode='a', index=False, header=False)
+  df.to_csv('Data\ID_collection.csv', mode='a', index=False, header=False)
 
 st.title('The bedst hearing test online:')
 col1, col2 = st.columns(2)

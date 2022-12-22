@@ -8,6 +8,7 @@ import plotly.graph_objs as go
 import matplotlib.pyplot as plt
 import seaborn as sns
 import itertools
+import random
 
 ## for statistical tests
 import scipy
@@ -20,9 +21,16 @@ from sklearn import preprocessing, impute, utils, linear_model, feature_selectio
 import imblearn
 
 ## for deep learning
+import tensorflow as tf
 from tensorflow import keras
+from tensorflow import math
 from keras import models, layers, backend as K
 import minisom
+
+# Scikit-learn : machine learning library
+from sklearn.model_selection import train_test_split
+from sklearn.compose import make_column_transformer
+from sklearn.preprocessing import MinMaxScaler, OneHotEncoder
 
 ## for explainer
 from lime import lime_tabular

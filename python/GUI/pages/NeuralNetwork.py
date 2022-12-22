@@ -212,7 +212,7 @@ if option == "Not binary":
     st.write('Output of network shown here, not alway 2D')
     # Prediction Probabilities
     y_prob = model.predict(X_test) 
-    ColorList = ["black","green","red","yellow","blue"]
+    ColorList = ["black","green","red","yellow","blue","pink","gray","cyan","purple","orange","crimson"]
     for i in range(len(X_test)):
       plt.scatter(x=X_test[i][0],y=X_test[i][1],c=ColorList[label_names[tf.argmax(y_prob[i])]])
     st.pyplot(plt.show())

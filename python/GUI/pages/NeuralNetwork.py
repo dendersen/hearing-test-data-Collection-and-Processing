@@ -217,7 +217,7 @@ if option == "Not binary":
     st.write('Output of network shown here, not alway 2D')
     # Prediction Probabilities
     y_prob = model.predict(X_test) 
-    ColorList = ["black","green","red","yellow","blue","pink","gray","cyan","purple","orange","crimson"]
+    ColorList = ["black","green","red","orange","blue","pink","olive","cyan","purple","gold","crimson"]
     for i in range(len(X_test)):
       plt.scatter(x=X_test[i][0],y=X_test[i][1],c=ColorList[label_names[tf.argmax(y_prob[i])]])
     st.pyplot(plt.show())
@@ -225,9 +225,8 @@ if option == "Not binary":
     if NFeatures == 2:
       colors = {np.unique(y_test)[i]:ColorList[i] for i in range(len(np.unique(y_test)))}
       print(colors)
-      X_test.min()
-      X1, X2 = np.meshgrid(np.arange(start=X_test[:,0].min()-0.1, stop=X_test[:,0].max()+0.1, step=0.01),
-                          np.arange(start=X_test[:,1].min()-0.1, stop=X_test[:,1].max()+0.1, step=0.01))
+      X1, X2 = np.meshgrid(np.arange(start=X_test[:,0].min()-0.1, stop=X_test[:,0].max()+0.1, step=0.005),
+                          np.arange(start=X_test[:,1].min()-0.1, stop=X_test[:,1].max()+0.1, step=0.005))
       label_names = np.unique(y_test)
       Y = np.array([])
       b = model.predict(np.array([X1.ravel(), X2.ravel()]).T)

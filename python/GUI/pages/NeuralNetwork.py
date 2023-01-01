@@ -1,5 +1,6 @@
 import streamlit as st
 from FunktionsAndMore import*
+from matplotlib.colors import ListedColormap
 from contextlib import contextmanager, redirect_stdout
 from io import StringIO
 from time import sleep
@@ -220,6 +221,27 @@ if option == "Not binary":
     for i in range(len(X_test)):
       plt.scatter(x=X_test[i][0],y=X_test[i][1],c=ColorList[label_names[tf.argmax(y_prob[i])]])
     st.pyplot(plt.show())
+    # show model parameters
+    if NFeatures == 2:
+      colors = {np.unique(y_test)[i]:ColorList[i] for i in range(len(np.unique(y_test)))}
+      print(colors)
+      X_test.min()
+      X1, X2 = np.meshgrid(np.arange(start=X_test[:,0].min()-0.1, stop=X_test[:,0].max()+0.1, step=0.01),
+                          np.arange(start=X_test[:,1].min()-0.1, stop=X_test[:,1].max()+0.1, step=0.01))
+      label_names = np.unique(y_test)
+      Y = np.array([])
+      b = model.predict(np.array([X1.ravel(), X2.ravel()]).T)
+      for i in range(len(np.array([X1.ravel(), X2.ravel()]).T)):
+        Y = np.append(Y,[label_names[tf.argmax(b[i])]])
+      Y = Y.reshape(X1.shape)
+      fig, ax = plt.subplots(figsize=(10,8))
+      ax.contourf(X1, X2, Y, alpha=0.5, cmap=ListedColormap(list(colors.values())))
+      ax.set(xlim=[X1.min(),X1.max()], ylim=[X2.min(),X2.max()], title="Classification regions")
+      for i in np.unique(y_test):
+        ax.scatter(X_test[y_test==i, 0], X_test[y_test==i, 1], c=colors[i], label="true "+str(i))  
+      plt.legend()
+      st.pyplot(plt.show())
+    
     st.write('Real values')
     RealValues = dtf_train.values
     for i in range(len(RealValues)):

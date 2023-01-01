@@ -3,21 +3,18 @@ import numpy as np
 import pandas as pd
 features = []
 ## for plotting
-import plotly
 import plotly.graph_objs as go
 import matplotlib.pyplot as plt
 import seaborn as sns
-import itertools
-import random
+
 
 ## for statistical tests
 import scipy
 import statsmodels.formula.api as smf
 import statsmodels.api as sm
-import ppscore
 
 ## for machine learning
-from sklearn import preprocessing, impute, utils, linear_model, feature_selection, model_selection, metrics, decomposition, cluster, ensemble
+from sklearn import preprocessing, impute, utils, model_selection, metrics, ensemble
 import imblearn
 
 ## for deep learning
@@ -29,17 +26,10 @@ import minisom
 
 # Scikit-learn : machine learning library
 from sklearn.model_selection import train_test_split
-from sklearn.compose import make_column_transformer
-from sklearn.preprocessing import MinMaxScaler, OneHotEncoder
+from sklearn.preprocessing import MinMaxScaler
 
 ## for explainer
-from lime import lime_tabular
 import shap
-
-## for geospatial
-import folium
-import geopy
-
 
 ###############################################################################
 #                       DATA ANALYSIS                                         #
@@ -102,27 +92,6 @@ def dtf_overview(dtf, max_cat=20, figsize=(10,5)):
     
     ## add legend
     print("\033[1;37;40m Categerocial \033[m", "\033[1;30;41m Numerical/DateTime \033[m", "\033[1;30;47m NaN \033[m")
-
-
-
-'''
-Check the primary key of a dtf
-:parameter
-    :param dtf: dataframe - input data
-    :param pk: str - column name
-'''
-def check_pk(dtf, pk):
-    unique_pk, len_dtf = dtf[pk].nunique(), len(dtf)
-    check = "unique "+pk+": "+str(unique_pk)+"  |  len dtf: "+str(len_dtf)
-    if unique_pk == len_dtf:
-        msg = "OK!!!  "+check
-        print(msg)
-    else:
-        msg = "WARNING!!!  "+check
-        ERROR = dtf.groupby(pk).size().reset_index(name="count").sort_values(by="count", ascending=False)
-        print(msg)
-        print("Example: ", pk, "==", ERROR.iloc[0,0])
-
 
 
 '''
@@ -293,101 +262,9 @@ def bivariate_plot(dtf, x, y, max_cat=20, figsize=(10,5)):
         print("--- got error ---")
         print(e)
 
-'''
-Plots a bivariate analysis using Nan and not-Nan as categories.
-'''
-def nan_analysis(dtf, na_x, y, max_cat=20, figsize=(10,5)):
-    dtf_NA = dtf[[na_x, y]]
-    dtf_NA[na_x] = dtf[na_x].apply(lambda x: "Value" if not pd.isna(x) else "NA")
-    bivariate_plot(dtf_NA, x=na_x, y=y, max_cat=max_cat, figsize=figsize)
-
-'''
-Plots a bivariate analysis with time variable.
-'''
-def ts_analysis(dtf, x, y, max_cat=20, figsize=(10,5)):
-    if utils_recognize_type(dtf, y, max_cat) == "cat":
-        dtf_tmp = dtf.groupby(x)[y].sum()       
-    else:
-        dtf_tmp = dtf.groupby(x)[y].median()
-    dtf_tmp.plot(title=y+" by "+x, figsize=figsize, grid=True)
-
-'''
-plots multivariate analysis.
-'''
-def cross_distributions(dtf, x1, x2, y, max_cat=20, figsize=(10,5)):
-    ## Y cat
-    if utils_recognize_type(dtf, y, max_cat) == "cat":
-        
-        ### cat vs cat --> contingency table
-        if (utils_recognize_type(dtf, x1, max_cat) == "cat") & (utils_recognize_type(dtf, x2, max_cat) == "cat"):
-            cont_table = pd.crosstab(index=dtf[x1], columns=dtf[x2], values=dtf[y], aggfunc="sum")
-            fig, ax = plt.subplots(figsize=figsize)
-            sns.heatmap(cont_table, annot=True, fmt='.0f', cmap="YlGnBu", ax=ax, linewidths=.5).set_title(x1+'  vs  '+x2+'  (filter: '+y+')')
-    
-        ### num vs num --> scatter with hue
-        elif (utils_recognize_type(dtf, x1, max_cat) == "num") & (utils_recognize_type(dtf, x2, max_cat) == "num"):
-            sns.lmplot(x=x1, y=x2, data=dtf, hue=y, height=figsize[1])
-        
-        ### num vs cat --> boxplot with hue
-        else:
-            if (utils_recognize_type(dtf, x1, max_cat) == "cat"):
-                cat,num = x1,x2
-            else:
-                cat,num = x2,x1
-            fig, ax = plt.subplots(figsize=figsize)
-            sns.boxplot(x=cat, y=num, hue=y, data=dtf, ax=ax).set_title(x1+'  vs  '+x2+'  (filter: '+y+')')
-            ax.grid(True)
-    
-    ## Y num
-    else:
-        ### all num --> 3D scatter plot
-        from mpl_toolkits.mplot3d import Axes3D
-        fig = plt.figure(figsize=figsize)
-        ax = fig.gca(projection='3d')
-        plot3d = ax.scatter(xs=dtf[x1], ys=dtf[x2], zs=dtf[y], c=dtf[y], cmap='inferno', linewidth=0.5)
-        fig.colorbar(plot3d, shrink=0.5, aspect=5, label=y)
-        ax.set(xlabel=x1, ylabel=x2, zlabel=y)
-        plt.show()
-
 ###############################################################################
 #                         CORRELATION                                         #
 ###############################################################################        
-'''
-Computes the correlation matrix.
-:parameter
-    :param dtf: dataframe - input data
-    :param method: str - "pearson" (numeric), "spearman" (categorical), "kendall"
-    :param negative: bool - if False it takes the absolute values of correlation
-    :param lst_filters: list - filter rows to show
-    :param annotation: logic - plot setting
-'''
-def corr_matrix(dtf, method="pearson", negative=True, lst_filters=[], annotation=True, figsize=(10,5)):    
-    ## factorize
-    dtf_corr = dtf.copy()
-    for col in dtf_corr.columns:
-        if dtf_corr[col].dtype == "O":
-            print("--- WARNING: Factorizing", dtf_corr[col].nunique(),"labels of", col, "---")
-            dtf_corr[col] = dtf_corr[col].factorize(sort=True)[0]
-    ## corr matrix
-    dtf_corr = dtf_corr.corr(method=method) if len(lst_filters) == 0 else dtf_corr.corr(method=method).loc[lst_filters]
-    dtf_corr = dtf_corr if negative is True else dtf_corr.abs()
-    fig, ax = plt.subplots(figsize=figsize)
-    sns.heatmap(dtf_corr, annot=annotation, fmt='.2f', cmap="YlGnBu", ax=ax, cbar=True, linewidths=0.5)
-    plt.title(method + " correlation")
-    return dtf_corr
-
-
-
-'''
-Computes the pps matrix.
-'''
-def pps_matrix(dtf, annotation=True, lst_filters=[], figsize=(10,5)):
-    dtf_pps = ppscore.matrix(dtf) if len(lst_filters) == 0 else ppscore.matrix(dtf).loc[lst_filters]
-    fig, ax = plt.subplots(figsize=figsize)
-    sns.heatmap(dtf_pps, vmin=0., vmax=1., annot=annotation, fmt='.2f', cmap="YlGnBu", ax=ax, cbar=True, linewidths=0.5)
-    plt.title("predictive power score")
-    return dtf_pps
-
 
     
 '''
@@ -443,7 +320,7 @@ def dtf_partitioning(dtf, y, test_size=0.3, shuffle=False):
     dtf_train, dtf_test = model_selection.train_test_split(dtf, test_size=test_size, shuffle=shuffle) 
     print("X_train shape:", dtf_train.drop(y, axis=1).shape, "| X_test shape:", dtf_test.drop(y, axis=1).shape)
     print("y_train mean:", round(np.mean(dtf_train[y]),2), "| y_test mean:", round(np.mean(dtf_test[y]),2))
-    print(dtf_train.shape[1], "features:", dtf_train.drop(y, axis=1).columns.to_list())
+    print(dtf_train.shape[1]-1, "features:", dtf_train.drop(y, axis=1).columns.to_list())
     return dtf_train, dtf_test
 
 '''
@@ -515,62 +392,6 @@ def rebalance(dtf, y, balance=None,  method="random", replace=True, size=1):
         return dtf_balanced
     
 
-
-'''
-Replace Na with a specific value or mean for numerical and mode for categorical. 
-'''
-def fill_na(dtf, x, value=None):
-    if value is None:
-        value = dtf[x].mean() if utils_recognize_type(dtf, x) == "num" else dtf[x].mode().iloc[0]
-        print("--- Replacing Nas with:", value, "---")
-        dtf[x] = dtf[x].fillna(value)
-        return dtf, value
-    else:
-        print("--- Replacing Nas with:", value, "---")
-        dtf[x] = dtf[x].fillna(value)
-        return dtf
-
-
-
-'''
-Transforms a categorical column into dummy columns
-:parameter
-    :param dtf: dataframe - feature matrix dtf
-    :param x: str - column name
-    :param dropx: logic - whether the x column should be dropped
-:return
-    dtf with dummy columns added
-'''
-def add_dummies(dtf, x, dropx=False):
-    dtf_dummy = pd.get_dummies(dtf[x], prefix=x, drop_first=True, dummy_na=False)
-    dtf = pd.concat([dtf, dtf_dummy], axis=1)
-    print( dtf.filter(like=x, axis=1).head() )
-    if dropx == True:
-        dtf = dtf.drop(x, axis=1)
-    return dtf
-    
-
-
-'''
-Reduces the classes a categorical column.
-:parameter
-    :param dtf: dataframe - feature matrix dtf
-    :param x: str - column name
-    :param dic_clusters_mapping: dict - ex: {"min":[30,45,180], "max":[60,120], "mean":[]}  where the residual class must have an empty list
-    :param dropx: logic - whether the x column should be dropped
-'''
-def add_feature_clusters(dtf, x, dic_clusters_mapping, dropx=False):
-    dic_flat = {v:k for k,lst in dic_clusters_mapping.items() for v in lst}
-    for k,v in dic_clusters_mapping.items():
-        if len(v)==0:
-            residual_class = k 
-    dtf[x+"_cluster"] = dtf[x].apply(lambda x: dic_flat[x] if x in dic_flat.keys() else residual_class)
-    if dropx == True:
-        dtf = dtf.drop(x, axis=1)
-    return dtf
-
-
-
 '''
 Scales features.
 '''
@@ -587,8 +408,6 @@ def scaling(dtf, y, scalerX=None, scalerY=None, fitted=False, task="classificati
     else:
         dtf_scaled[y] = dtf[y]
         return dtf_scaled, scalerX
-
-
 
 '''
 Computes all the required data preprocessing.
@@ -688,144 +507,10 @@ def data_preprocessing(dtf, y, processNas=None, processCategorical=None, split=N
         print("--- got error ---")
         print(e)
 
-###############################################################################
-#                  FEATURES SELECTION                                         #
-###############################################################################
-'''
-Performs features selections: by correlation (keeping the lowest p-value) and by lasso.
-:prameter
-    :param dtf: dataframe - feature matrix dtf
-    :param y: str - name of the dependent variable
-    :param top: num - number of top features
-    :param task: str - "classification" or "regression"
-:return
-    dic with lists of features to keep.
-'''     
-def features_selection(dtf, y, top=10, task="classification", figsize=(20,10)):
-    try:
-        dtf_X = dtf.drop(y, axis=1)
-        feature_names = dtf_X.columns
-        
-        ## p-value (one way anova F-test)
-        model = feature_selection.f_classif if task=="classification" else feature_selection.f_regression
-        selector = feature_selection.SelectKBest(score_func=model, k=top).fit(dtf_X.values, dtf[y].values)
-        pvalue_selected_features = feature_names[selector.get_support()]
-        
-        ## regularization (classif-->lasso (l1), regr-->ridge (l2))
-        model = linear_model.LogisticRegression(C=1, penalty="l1", solver='liblinear') if task=="classification" else linear_model.Ridge(alpha=1.0, fit_intercept=True)
-        selector = feature_selection.SelectFromModel(estimator=model, max_features=top).fit(dtf_X.values, dtf[y].values)
-        regularization_selected_features = feature_names[selector.get_support()]
-        
-        ## plot
-        dtf_features = pd.DataFrame({"features":feature_names})
-        dtf_features["p_value"] = dtf_features["features"].apply(lambda x: "p_value" if x in pvalue_selected_features else "")
-        dtf_features["num1"] = dtf_features["features"].apply(lambda x: 1 if x in pvalue_selected_features else 0)
-        dtf_features["regularization"] = dtf_features["features"].apply(lambda x: "regularization" if x in regularization_selected_features else "")
-        dtf_features["num2"] = dtf_features["features"].apply(lambda x: 1 if x in regularization_selected_features else 0)
-        dtf_features["method"] = dtf_features[["p_value","regularization"]].apply(lambda x: (x[0]+" "+x[1]).strip(), axis=1)
-        dtf_features["selection"] = dtf_features["num1"] + dtf_features["num2"]
-        dtf_features["method"] = dtf_features["method"].apply(lambda x: x.split()[0]+" + "+x.split()[1] if len(x.split())==2 else x)
-        fig, ax = plt.subplots(figsize=figsize)
-        sns.barplot(y="features", x="selection", hue="method", data=dtf_features.sort_values("selection", ascending=False), ax=ax, dodge=False)
-               
-        join_selected_features = list(set(pvalue_selected_features).intersection(regularization_selected_features))
-        return {"p_value":pvalue_selected_features, "regularization":regularization_selected_features, "join":join_selected_features}
-    
-    except Exception as e:
-        print("--- got error ---")
-        print(e)
-
-
-
-'''
-Computes features importance.
-:parameter
-    :param X: array
-    :param X_names: list
-    :param model: model istance (after fitting)
-    :param figsize: tuple - plot setting
-:return
-    dtf with features importance
-'''
-def features_importance(X, y, X_names, model=None, task="classification", figsize=(10,10)):
-    ## model
-    if model is None:
-        if task == "classification":
-            model = ensemble.GradientBoostingClassifier()  
-        elif task == "regression":
-            model = ensemble.GradientBoostingRegressor()
-    model.fit(X,y)
-    print("--- model used ---")
-    print(model)
-    
-    ## importance dtf
-    importances = model.feature_importances_
-    dtf_importances = pd.DataFrame({"IMPORTANCE":importances, "VARIABLE":X_names}).sort_values("IMPORTANCE", ascending=False)
-    dtf_importances['cumsum'] = dtf_importances['IMPORTANCE'].cumsum(axis=0)
-    dtf_importances = dtf_importances.set_index("VARIABLE")
-    
-    ## plot
-    fig, ax = plt.subplots(nrows=1, ncols=2, sharex=False, sharey=False, figsize=figsize)
-    fig.suptitle("Features Importance", fontsize=20)
-    ax[0].title.set_text('variables')
-    dtf_importances[["IMPORTANCE"]].sort_values(by="IMPORTANCE").plot(kind="barh", legend=False, ax=ax[0]).grid(axis="x")
-    ax[0].set(ylabel="")
-    ax[1].title.set_text('cumulative')
-    dtf_importances[["cumsum"]].plot(kind="line", linewidth=4, legend=False, ax=ax[1])
-    ax[1].set(xlabel="", xticks=np.arange(len(dtf_importances)), xticklabels=dtf_importances.index)
-    plt.xticks(rotation=70)
-    plt.grid(axis='both')
-    plt.show()
-    return dtf_importances.reset_index()
 
 ###############################################################################
 #                     VISUALIZE MODELS AND DATA                               #
 ###############################################################################
-'''
-6D data visualize
-'''
-def OccupiedShow(dtf):
-    fig = px.scatter_3d(
-        dtf, x="Temp", y="Humidity", z="Light",
-        color="CO2",color_continuous_scale='viridis',
-        size="Ratio",
-        symbol='Occupancy'
-        )
-    fig.show()
-
-'''
-Visualize 2D data with scatterplot
-'''
-def Scatter_plot(Data,x,y,color):
-    X = Data[x]
-    Y = Data[y]
-    Color = Data[color]
-    colors = []
-    for i in range(len(Color)):
-        if Color[i] == 1:
-            colors.append("green")
-        else:
-            colors.append("black")
-    plt.scatter(X,Y,c=colors)
-    plt.show()
-
-'''
-Decomposes the feture matrix of train and test.
-:parameter
-    :param X_train: array
-    :param X_test: array
-    :param n_features: num - how many dimensions you want
-:return
-    dict with new train and test, and the model 
-'''
-def utils_dimensionality_reduction(X_train, X_test, n_features=2):
-    model = decomposition.PCA(n_components=n_features)
-    X_train = model.fit_transform(X_train)
-    X_test = model.transform(X_test)
-    return X_train, X_test, model
-
-
-
 '''
 Plots a 2d classification model result.
 :parameter

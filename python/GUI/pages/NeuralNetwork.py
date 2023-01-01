@@ -55,7 +55,7 @@ if option == "Binary":
   
   # Deep neural network with fully connected layers
   #Here you assume an input dataset of N features and 1 binary target variable
-  NFeatures = int(st.number_input('Add exstra features, features indicated abowe',value=5))
+  NFeatures = int(st.number_input('Add exstra features, features indicated abowe',value=len(dtf_train.columns)-1))
   #If extra units are needed
   AddExstraUnits = int(st.number_input('Add exstra units',value=6))
   AU = AddExstraUnits
@@ -112,13 +112,12 @@ if option == "Binary":
   output = st.empty()
   with st_capture(output.code):
     model.summary()
-  #We show the network viasual
+  #We show the network visual
   st.pyplot(visualize_nn(model, description=True, figsize=(10,8)))
   #Run model
   Run = st.button('Run model on data')
   if Run:
     st.write('Model results')
-    output = st.empty()
     model, predicted_prob, predicted = fit_dl_classif(X_train, y_train, X_test, model, batch_size=32, epochs=500, threshold=0.5)
     output = st.empty()
     with st_capture(output.code):
@@ -162,8 +161,8 @@ if option == "Not binary":
   tf.random.set_seed(19)
   # Create the model
   #Here you assume an input dataset of N features and 1 binary target variable
-  NFeatures = int(st.number_input('Add exstra features, features indicated abowe',value=5))
-  labels = st.number_input("Write the amount of labels",value=2)
+  NFeatures = int(st.number_input('Add exstra features',value=len(dtf_train.columns)-1))
+  labels = st.number_input("Write the amount of labels",value=len(np.unique(y_test)))
   #If extra units are needed
   AddExstraUnits = int(st.number_input('Add exstra units',value=6))
   AU = AddExstraUnits
@@ -193,7 +192,12 @@ if option == "Not binary":
                           y_train,
                           epochs=500,
                           validation_data=(X_test, y_test))
+    #We print the summary
+    output = st.empty()
+    with st_capture(output.code):
+      model.summary()
     
+    #visualize the model
     st.pyplot(visualize_nn(model, description=True, figsize=(10,8)))
     
     # Model loss curve
@@ -221,5 +225,3 @@ if option == "Not binary":
     for i in range(len(RealValues)):
         plt.scatter(RealValues[i,0],RealValues[i,1],c=ColorList[int(RealValues[i,NFeatures])])
     st.pyplot(plt.show())
-
-

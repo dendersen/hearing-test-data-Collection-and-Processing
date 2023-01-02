@@ -64,11 +64,11 @@ if predict:
   output = st.empty()
   with st_capture(output.code):
     data_preprocessing(dtf, y="Y")
-  dtf_train, dtf_test = dtf_partitioning(dtf, y="Y", test_size=0.3, shuffle=False)
+  dtf_train, dtf_test = dtf_partitioning(dtf, y="Y", test_size=0.2, shuffle=False)
   #We show what we just did abowe^
   output = st.empty()
   with st_capture(output.code):
-    dtf_partitioning(dtf, y="Y", test_size=0.3, shuffle=False)
+    dtf_partitioning(dtf, y="Y", test_size=0.2, shuffle=False)
   #Show training data
   st.write('Training data is:')
   st.write(dtf_train.head(3))

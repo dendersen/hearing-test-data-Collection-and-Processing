@@ -5,7 +5,7 @@ import codecs
 
 
 ser = serial.Serial( 
-        port='COM5', #COM4
+        port='COM4', #COM4
         baudrate = 9600,
         parity=serial.PARITY_NONE,
         stopbits=serial.STOPBITS_ONE,
@@ -19,6 +19,7 @@ resevedText=""
 toMCUText="1234"
 endingChar=";"
 ser.reset_input_buffer()
+testlength = 10
 
 
 def sendMesege(text):
@@ -30,14 +31,15 @@ def sendMesege(text):
         ser.write(char.encode()) # send en char af gangen til MCU
 
     time.sleep(0.5)
-    
+    endSec =(time.localtime().tm_sec + testlength)%60
     while 1:
         resevedText=str(ser.read().decode("utf-8",errors='replace')) # reseave text from MCU
-
-        if resevedText == ";":
+        if resevedText == ";" or endSec == time.localtime().tm_sec:
             break
         else:
             line += resevedText # adds the new text to the line
 
+    if (line == ""):
+        line = "00"
     print("Fra MCU - data:",line,"\n") 
     ser.reset_input_buffer()

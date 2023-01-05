@@ -45,7 +45,7 @@ def generateFrequency(inputFrequency:float,earID:int)->tuple[float,str]:
   delayVar = first+second+str(earID)
   output = delayFunctionality(delayVar)
   
-  print("frequency = " + str(output),"\ndelay sring = " + str(delayVar))
+  #print("frequency = " + str(output),"\ndelay sring = " + str(delayVar))
   return (output,delayVar)
 
 def delayFunctionality(delay:str) -> float:
@@ -59,7 +59,7 @@ def delayFunctionality(delay:str) -> float:
   if output > splitPoint :
     output =(-frequency+t_high_B)/t_high_A 
   
-  print("unajusted:",frequency,"\nadjusted:",output)
+  #print("unajusted:",frequency,"\nadjusted:",output)
   return output
 
 generateFrequency(1000,3)[1]

@@ -22,7 +22,7 @@ ser.reset_input_buffer()
 testlength = 10
 
 
-def sendMesege(text):
+def sendMessage(text):
     text += ";"
     line = ""
     print("Til MCU - data: " , text,"\n")
@@ -43,3 +43,4 @@ def sendMesege(text):
         line = "00"
     print("Fra MCU - data:",line,"\n") 
     ser.reset_input_buffer()
+    return line

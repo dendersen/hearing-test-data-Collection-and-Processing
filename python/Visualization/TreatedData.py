@@ -1,12 +1,10 @@
 import pandas as pd
 from csv import DictWriter
 
-Re = pd.read_csv('Data\FinalResultStorage.csv')
-field_names = ['ID','Frekvens','Out','Response','AnswerTime']
-Svar = ["None","Left","Right","Both"]
-Ear = ["None","Left","Right","Both"]
-
 def Change_Dataform():
+  Re = pd.read_csv('Data\FinalResultStorage.csv')
+  Svar = ["None","Left","Right","Both"]
+  Ear = ["None","Left","Right","Both"]
   with open('NewResultStorage.csv', 'a') as f_object:
     for j in range(0,len(Re)):
       Out = Re.loc[j,'LeftOUT']+Re.loc[j,'RightOUT']*2
@@ -22,7 +20,6 @@ def Change_Dataform():
 
 def testSaveData(ID, FrequencyPlayed, earPlayed, Answer, AnswerTime):
   with open('Data\FinalResultStorage.csv', 'a') as f_object:
-    #TODO TonePlayed and Answer is currently not correct and needs a fix
     isEarLeftPlaying = 0
     isEarRightPlaying = 0
     
@@ -36,8 +33,8 @@ def testSaveData(ID, FrequencyPlayed, earPlayed, Answer, AnswerTime):
     DataToSave = {'ID': [ID],
                   'Frekvens': [FrequencyPlayed],
                   'LeftOUT': [isEarLeftPlaying],
-                  'LeftResponse': [int(Answer[0])],
                   'RightOUT': [isEarRightPlaying],
+                  'LeftResponse': [int(Answer[0])],
                   'RightResponse': [int(Answer[1])],
                   'AnswerTime': [AnswerTime]}
     
@@ -49,5 +46,3 @@ def Clear_Data():
   f = open("NewResultStorage.csv","w")
   f.write("ID,Frekvens,Out,Response,AnswerTime\n")
   f.close()
-
-testSaveData(0,6000,3,'01',3)

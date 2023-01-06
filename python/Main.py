@@ -8,18 +8,27 @@ def main():
 
 tone = 100
 
-def runTest(frequency, earPlayed):
-  
+def runTest(ID, frequency, earPlayed):
+  startTime = time.time()
   # For earPlayed: 0 = none, 1 = lefResponse, 2 = rightResponse, 3 = both
-  testAnswer = USB.sendMessage(inS.generateFrequency(frequency,earPlayed)[1])
+  correctedFrequency, delay = inS.generateFrequency(frequency,earPlayed)
+  testAnswer = USB.sendMessage(delay)
+  endTime = time.time()
   
-  testSaveData()
+  deltatime = round((endTime-startTime) * 1000,0)
+  
+  # secondsSpent = endTime.tm_sec - startTime.tm_sec
+  # msSpent = endTime.tm_
+  
+  testSaveData(ID,correctedFrequency,earPlayed,testAnswer,deltatime)
 
-while(1):
-  USB.sendMessage(inS.generateFrequency(1000,1)[1])
-  time.sleep(5)
-  USB.sendMessage(inS.generateFrequency(500,0)[1])
-  time.sleep(5)
+
+runTest(1,5000,3)
+# while(1):
+#   USB.sendMessage(inS.generateFrequency(1000,1)[1])
+#   time.sleep(5)
+#   USB.sendMessage(inS.generateFrequency(500,0)[1])
+#   time.sleep(5)
 
 
 

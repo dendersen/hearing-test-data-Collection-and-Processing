@@ -16,8 +16,6 @@
 #define BITVAL(x,y) (((x)>>(y)) & 1)
 #define HERTZ(x) ((CPU_CLOCK/400)/2)
 
-float tonePlaying = 500;	
-
 volatile int currentBufferIndex = 0;
 volatile uint8_t playingSound = 0;
 
@@ -28,73 +26,61 @@ int main(int argc, char const *argv[]){
 	DDRC = 0x00; // bit 0 og 1 er input fra knapperne
 
 
-  	init();
+  init();
 
 	uint16_t firstDigit = 15;
 	uint8_t secondDigit = 60;
 	uint8_t chosenEar = 0;
 
-  	while(1){
+  while(1){
 
+	playtone(1<<firstDigit,secondDigit);
 
-		playtone(1<<firstDigit,secondDigit);
-
-		if(playingSound && bit_is_set(PINC,PC0)|| bit_is_set(PINC,PC1)){
-			// hvis dette kode køre, er der trykket på en knap og lyd bliver spillet
-			uint8_t blueIsPresed = 0;
-			uint8_t yellowIsPresed = 0;
-			uint16_t i;
-			for(i = 0; i < 500; i++){
-				if(bit_is_set(PINC,PC0)){
-					blueIsPresed = 0x01;
-				}
-				if(bit_is_set(PINC,PC1)){
-					yellowIsPresed = 0x01;
-				}
-				_delay_ms(1);
+	if(playingSound && bit_is_set(PINC,PC0)|| bit_is_set(PINC,PC1)){
+		// hvis dette kode køre, er der trykket på en knap og lyd bliver spillet
+		uint8_t rightIsPresed = 0;
+		uint8_t leftIsPresed = 0;
+		uint16_t i;
+		for(i = 0; i < 500; i++){
+			if(bit_is_set(PINC,PC0)){
+				rightIsPresed = 0x01;
 			}
-
-			tx_serial_number(blueIsPresed);
-			tx_serial_number(yellowIsPresed);
-			tx_serial(";");
-
-			// tx_serial("Tillyke en knap er blevet trykket på! \n");
-			// tx_serial("firstDigit er: ");
-			// tx_serial_number(firstDigit);
-			// tx_serial("\n second digit er: ");
-			// tx_serial_number(secondDigit);
-			// tx_serial("\n chosen ear er: ");
-			// tx_serial_number(chosenEar);
-			// tx_serial(";");
-			playingSound = 0x00;
-			earBeingPlayed = 0x00;
+			if(bit_is_set(PINC,PC1)){
+				leftIsPresed = 0x01;
+			}
+			_delay_ms(1);
 		}
+		tx_serial_number(rightIsPresed);
+		tx_serial_number(leftIsPresed);
+		tx_serial(";");
+		playingSound = 0x00;
+		earBeingPlayed = 0x00;
+	}
 	
-		if(currentBufferIndex != 0 && currentData[currentBufferIndex-1] == ';'){ // når vi er nået slutningen af beskeden
+	if(currentBufferIndex != 0 && currentData[currentBufferIndex-1] == ';'){ // når vi er nået slutningen af beskeden
+		char firstDigitList[2];
+		char secondDigitList[3];
+		char chosenEarList[1];
 
-			char firstDigitList[2];
-			char secondDigitList[3];
-			char chosenEarList[1];
+		firstDigitList[0] = currentData[0];
+		firstDigitList[1] = currentData[1];
 
-			firstDigitList[0] = currentData[0];
-			firstDigitList[1] = currentData[1];
+		secondDigitList[0] = currentData[2];
+		secondDigitList[1] = currentData[3];
+		secondDigitList[2] = currentData[4];
 
-			secondDigitList[0] = currentData[2];
-			secondDigitList[1] = currentData[3];
-			secondDigitList[2] = currentData[4];
+		chosenEarList[0] = currentData[5];
 
-			chosenEarList[0] = currentData[5];
-
-			firstDigit = (uint16_t) charListToNumber(firstDigitList,2);
-			secondDigit = (uint8_t) charListToNumber(secondDigitList,3);
-			chosenEar = (uint8_t) charListToNumber(chosenEarList,1);
-			earBeingPlayed = chosenEar << 1;
-
-			playingSound = 1;
-			currentBufferIndex=0;
-		}
+		firstDigit = (uint16_t) charListToNumber(firstDigitList,2);
+		secondDigit = (uint8_t) charListToNumber(secondDigitList,3);
+		chosenEar = (uint8_t) charListToNumber(chosenEarList,1);
 		
-  	}
+		earBeingPlayed = chosenEar << 1;
+		playingSound = 1;
+		currentBufferIndex=0;
+	}
+	
+  }
  	return 0;
 }
 

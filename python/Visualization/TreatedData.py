@@ -20,6 +20,21 @@ def Change_Dataform():
       #append data frame to CSV file
       df.to_csv('NewResultStorage.csv', mode='a', index=False, header=False)
 
+def TestSaveData(ID, FrequencyPlayed, TonePlayed, Answer, AnswerTime):
+  with open('Data\FinalResultStorage.csv', 'a') as f_object:
+    
+    
+    
+    DataToSave = {'ID': [ID],
+                  'Frekvens': [FrequencyPlayed],
+                  'LeftOUT': [],
+                  'LeftResponse': [],
+                  'RightOUT': [],
+                  'RightResponse': [],
+                  'AnswerTime': [AnswerTime],
+
+    }
+
 def Clear_Data():
   f = open("NewResultStorage.csv","w")
   f.write("ID,Frekvens,Out,Response,AnswerTime\n")

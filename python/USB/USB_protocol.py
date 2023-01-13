@@ -31,10 +31,9 @@ def sendMessage(text):
         ser.write(char.encode()) # send en char af gangen til MCU
 
     time.sleep(0.5)
-    endSec =(time.localtime().tm_sec + testlength)%60
     while 1:
         resevedText=str(ser.read().decode("utf-8",errors='replace')) # reseave text from MCU
-        if resevedText == ";" or endSec == time.localtime().tm_sec:
+        if resevedText == ";":
             break
         else:
             line += resevedText # adds the new text to the line

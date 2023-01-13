@@ -8,7 +8,7 @@ def Change_Dataform():
   with open('NewResultStorage.csv', 'a') as f_object:
     for j in range(0,len(Re)):
       Out = Re.loc[j,'LeftOUT']+Re.loc[j,'RightOUT']*2
-      Response = Re.loc[j,'LeftResponse']+Re.loc[j,'RightResponse']*2 # 0 = none, 1 = lefResponse, 2 = rightResponse, 3 = both
+      Response = Re.loc[j,'LeftResponse']+Re.loc[j,'RightResponse']*2 # 0 = none, 1 = rightResponse, 2 = lefResponse, 3 = both
       data = {'ID': [Re.loc[j,'ID']],
               'Frekvens': [Re.loc[j,'Frekvens']],
               'Out': [Ear[Out]],
@@ -23,9 +23,9 @@ def testSaveData(ID, FrequencyPlayed, earPlayed, Answer, AnswerTime):
     isEarLeftPlaying = 0
     isEarRightPlaying = 0
     
-    if (earPlayed == 1 or earPlayed == 3):
-      isEarLeftPlaying = 1
     if (earPlayed == 2 or earPlayed == 3):
+      isEarLeftPlaying = 1
+    if (earPlayed == 1 or earPlayed == 3):
       isEarRightPlaying = 1
     
     Answer = [*Answer]

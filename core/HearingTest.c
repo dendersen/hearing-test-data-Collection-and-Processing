@@ -11,7 +11,7 @@
 
 void delayer(uint16_t firstDigit,uint8_t secondDigit);
 
-uint8_t earBeingPlayed = 2; 
+uint8_t earBeingPlayed = 0; 
 
 void playtone(uint16_t firstDigit,uint8_t secondDigit){
   PORTB = earBeingPlayed;

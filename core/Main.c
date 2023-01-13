@@ -23,7 +23,7 @@ int charListToNumber(char number[], int lenghOfArray);
 
 int main(int argc, char const *argv[]){
 	DDRB = 0x06;// bit 1 og 2 er output til høretelefonerne
-	DDRC = 0x00; // bit 0 og 1 er input fra knapperne
+	DDRC = 0b1000; // bit 0 og 1 er input fra knapperne
 
 
   init();
@@ -36,10 +36,11 @@ int main(int argc, char const *argv[]){
 
 	playtone(1<<firstDigit,secondDigit);
 
-	if(playingSound && bit_is_set(PINC,PC0)|| bit_is_set(PINC,PC1)){
+	if(playingSound && bit_is_set(PINC,PC0) || bit_is_set(PINC,PC1) || bit_is_set(PINC,PC2)){
 		// hvis dette kode køre, er der trykket på en knap og lyd bliver spillet
 		uint8_t rightIsPresed = 0;
 		uint8_t leftIsPresed = 0;
+		uint8_t nonIsPresed = 0;
 		uint16_t i;
 		for(i = 0; i < 500; i++){
 			if(bit_is_set(PINC,PC0)){
@@ -48,13 +49,22 @@ int main(int argc, char const *argv[]){
 			if(bit_is_set(PINC,PC1)){
 				leftIsPresed = 0x01;
 			}
+			if(bit_is_set(PINC,PC2)){
+				nonIsPresed = 0x01;
+			}
 			_delay_ms(1);
 		}
-		tx_serial_number(rightIsPresed);
-		tx_serial_number(leftIsPresed);
+		if(nonIsPresed == 0x01){
+			tx_serial("00");
+		} else{
+			tx_serial_number(rightIsPresed);
+			tx_serial_number(leftIsPresed);
+		}
 		tx_serial(";");
+
 		playingSound = 0x00;
 		earBeingPlayed = 0x00;
+		PORTC = 0b0;
 	}
 	
 	if(currentBufferIndex != 0 && currentData[currentBufferIndex-1] == ';'){ // når vi er nået slutningen af beskeden
@@ -77,6 +87,7 @@ int main(int argc, char const *argv[]){
 		
 		earBeingPlayed = chosenEar << 1;
 		playingSound = 1;
+		PORTC = 0b1000;
 		currentBufferIndex=0;
 	}
 	
@@ -99,12 +110,6 @@ int charListToNumber(char number[], int lenghOfArray){
 		fullNumber += newDigit;	
 	}
 	return fullNumber;
-
-	// tx_serial_number(fullNumber);
-	// tx_serial(";");
-	// tx_serial("the new message is:");
-	// tx_serial_number(fullNumber);
-	// tx_serial(";");
 }
 
 void init(){
@@ -126,6 +131,3 @@ void riteBuffer(){
 	tx_serial(currentData);
 	tx_serial(" ;");
 }
-
-
-	

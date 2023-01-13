@@ -1,37 +1,44 @@
+import random
 import USB.USB_protocol as USB
 import time 
 import USB.integerSplit as inS
 from Visualization.TreatedData import testSaveData
+import math
 
-def main():
-  pass
-
-tone = 100
+class ToneObject:
+  def __init__(self, tone, ear) -> None:
+    self.tone = tone
+    self.ear = ear
 
 def runTest(ID, frequency, earPlayed):
   startTime = time.time()
-  # For earPlayed: 0 = none, 1 = lefResponse, 2 = rightResponse, 3 = both
+  # For earPlayed: 0 = none, 1 = rightResponse, 2 = lefResponse, 3 = both
   correctedFrequency, delay = inS.generateFrequency(frequency,earPlayed)
+  print(delay)
   testAnswer = USB.sendMessage(delay)
   endTime = time.time()
   
   deltatime = round((endTime-startTime) * 1000,0)
   
-  # secondsSpent = endTime.tm_sec - startTime.tm_sec
-  # msSpent = endTime.tm_
-  
   testSaveData(ID,correctedFrequency,earPlayed,testAnswer,deltatime)
 
-
-runTest(1,5000,3)
-# while(1):
-#   USB.sendMessage(inS.generateFrequency(1000,1)[1])
-#   time.sleep(5)
-#   USB.sendMessage(inS.generateFrequency(500,0)[1])
-#   time.sleep(5)
-
-
-
-
-
-
+def runTestSequence(ID,minFrequency,maxFrequency,numberOfTones):
+  a = math.exp(math.log((maxFrequency/minFrequency))/(numberOfTones-1))
+  b = minFrequency
+  
+  listOfTones = []
+  
+  for x in range(numberOfTones):
+    frequency = round(b*a**x)
+    print(frequency)
+    # if(random.randint(1,100) <= 70):
+    #   listOfTones.append(ToneObject(frequency,0))
+    # listOfTones.append(ToneObject(frequency,1))
+    # listOfTones.append(ToneObject(frequency,2))
+    listOfTones.append(ToneObject(frequency,3))
+  
+  # random.shuffle(listOfTones)
+  
+  for tone in listOfTones:
+    runTest(ID,tone.tone,tone.ear)
+    time.sleep(0.1)

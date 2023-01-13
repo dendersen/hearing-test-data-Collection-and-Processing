@@ -34,17 +34,16 @@ import shap
 ###############################################################################
 #                       DATA ANALYSIS                                         #
 ###############################################################################
+'''
+Recognize whether a column is numerical or categorical.
+:parameter
+    :param dtf: dataframe - input data
+    :param col: str - name of the column to analyze
+    :param max_cat: num - max number of unique values to recognize a column as categorical
+:return
+    "cat" if the column is categorical, "dt" if datetime, "num" otherwise
+'''
 def utils_recognize_type(dtf, col, max_cat=20):
-    '''
-    Recognize whether a column is numerical or categorical.
-    :parameter
-        :param dtf: dataframe - input data
-        :param col: str - name of the column to analyze
-        :param max_cat: num - max number of unique values to recognize a column as categorical
-    :return
-        "cat" if the column is categorical, "dt" if datetime, "num" otherwise
-    '''
-    
     if (dtf[col].dtype == "O") | (dtf[col].nunique() < max_cat):
         return "cat"
     elif dtf[col].dtype in ['datetime64[ns]','<M8[ns]']:
@@ -52,14 +51,13 @@ def utils_recognize_type(dtf, col, max_cat=20):
     else:
         return "num"
 
-
+'''
+Get a general overview of a dataframe.
+:parameter
+    :param dtf: dataframe - input data
+    :param max_cat: num - mininum number of recognize column type
+'''
 def dtf_overview(dtf, max_cat=20, figsize=(10,5)):
-    '''
-    Get a general overview of a dataframe.
-    :parameter
-        :param dtf: dataframe - input data
-        :param max_cat: num - mininum number of recognize column type
-    '''
     ## recognize column type
     dic_cols = {col:utils_recognize_type(dtf, col, max_cat=max_cat) for col in dtf.columns}
         
@@ -95,16 +93,17 @@ def dtf_overview(dtf, max_cat=20, figsize=(10,5)):
     ## add legend
     print("\033[1;37;40m Categerocial \033[m", "\033[1;30;41m Numerical/DateTime \033[m", "\033[1;30;47m NaN \033[m")
 
+
+'''
+Moves columns into a dtf.
+:parameter
+    :param dtf: dataframe - input data
+    :param lst_cols: list - names of the columns that must be moved
+    :param where: str - "front" or "end"
+:return
+    dtf with moved columns
+'''
 def pop_columns(dtf, lst_cols, where="front"):
-    '''
-    Moves columns into a dtf.
-    :parameter
-        :param dtf: dataframe - input data
-        :param lst_cols: list - names of the columns that must be moved
-        :param where: str - "front" or "end"
-    :return
-        dtf with moved columns
-    '''
     current_cols = dtf.columns.tolist()
     for col in lst_cols:    
         current_cols.pop( current_cols.index(col) )
@@ -115,20 +114,21 @@ def pop_columns(dtf, lst_cols, where="front"):
     return dtf
 
 
+
+'''
+Plots the frequency distribution of a dtf column.
+:parameter
+    :param dtf: dataframe - input data
+    :param x: str - column name
+    :param max_cat: num - max number of uniques to consider a numerical variable as categorical
+    :param top: num - plot setting
+    :param show_perc: logic - plot setting
+    :param bins: num - plot setting
+    :param quantile_breaks: tuple - plot distribution between these quantiles (to exclude outilers)
+    :param box_logscale: logic
+    :param figsize: tuple - plot settings
+'''
 def freqdist_plot(dtf, x, max_cat=20, top=None, show_perc=True, bins=100, quantile_breaks=(0,10), box_logscale=False, figsize=(10,5)):
-    '''
-    Plots the frequency distribution of a dtf column.
-    :parameter
-        :param dtf: dataframe - input data
-        :param x: str - column name
-        :param max_cat: num - max number of uniques to consider a numerical variable as categorical
-        :param top: num - plot setting
-        :param show_perc: logic - plot setting
-        :param bins: num - plot setting
-        :param quantile_breaks: tuple - plot distribution between these quantiles (to exclude outilers)
-        :param box_logscale: logic
-        :param figsize: tuple - plot settings
-    '''
     try:
         ## cat --> freq
         if utils_recognize_type(dtf, x, max_cat) == "cat":   
@@ -181,15 +181,15 @@ def freqdist_plot(dtf, x, max_cat=20, top=None, show_perc=True, bins=100, quanti
         print("--- got error ---")
         print(e)
 
-def bivariate_plot(dtf, x, y, max_cat=20, figsize=(10,5)): #TODO change name Y #TODO move box covering data #TODO find ud af hvad søjler er (humidity)
-    '''
-    Plots a bivariate analysis.
-    :parameter
-        :param dtf: dataframe - input data
-        :param x: str - column
-        :param y: str - column
-        :param max_cat: num - max number of uniques to consider a numerical variable as categorical
-    '''
+'''
+Plots a bivariate analysis.
+:parameter
+    :param dtf: dataframe - input data
+    :param x: str - column
+    :param y: str - column
+    :param max_cat: num - max number of uniques to consider a numerical variable as categorical
+'''
+def bivariate_plot(dtf, x, y, max_cat=20, figsize=(10,5)):
     try:
         ## num vs num --> stacked + scatter with density
         if (utils_recognize_type(dtf, x, max_cat) == "num") & (utils_recognize_type(dtf, y, max_cat) == "num"):
@@ -232,7 +232,7 @@ def bivariate_plot(dtf, x, y, max_cat=20, figsize=(10,5)): #TODO change name Y #
             ### fix figure
             plt.show()
         
-        ## num vs cat --> density + stacked + boxplot  #TODO delete boxplot
+        ## num vs cat --> density + stacked + boxplot 
         else:
             if (utils_recognize_type(dtf, x, max_cat) == "cat"):
                 cat,num = x,y
@@ -249,7 +249,7 @@ def bivariate_plot(dtf, x, y, max_cat=20, figsize=(10,5)): #TODO change name Y #
             dtf_noNan = dtf[dtf[num].notnull()]  #can't have nan
             ax[1].title.set_text('bins')
             breaks = np.quantile(dtf_noNan[num], q=np.linspace(0,1,11))
-            tmp = dtf_noNan.groupby([cat, pd.cut(dtf_noNan[num], breaks, duplicates='drop')]).size().unstack().T #TODO find better name for bins
+            tmp = dtf_noNan.groupby([cat, pd.cut(dtf_noNan[num], breaks, duplicates='drop')]).size().unstack().T
             tmp = tmp[dtf_noNan[cat].unique()]
             tmp["tot"] = tmp.sum(axis=1)
             for col in tmp.drop("tot", axis=1).columns:
@@ -266,16 +266,17 @@ def bivariate_plot(dtf, x, y, max_cat=20, figsize=(10,5)): #TODO change name Y #
 #                         CORRELATION                                         #
 ###############################################################################        
 
+    
+'''
+Computes correlation/dependancy and p-value (prob of happening something different than what observed in the sample)
+'''
 def test_corr(dtf, x, y, max_cat=20):
-    '''
-    Computes correlation/dependancy and p-value (prob of happening something different than what observed in the sample)
-    '''
     ## num vs num --> pearson
     if (utils_recognize_type(dtf, x, max_cat) == "num") & (utils_recognize_type(dtf, y, max_cat) == "num"):
         dtf_noNan = dtf[dtf[x].notnull()]  #can't have nan
         coeff, p = scipy.stats.pearsonr(dtf_noNan[x], dtf_noNan[y])
         coeff, p = round(coeff, 3), round(p, 3)
-        conclusion = "Significant" if p < 0.05 else "Non-Significant" #TODO make P global
+        conclusion = "Significant" if p < 0.05 else "Non-Significant"
         print("Pearson Correlation:", coeff, conclusion, "(p-value: "+str(p)+")")
     
     ## cat vs cat --> cramer (chiquadro)

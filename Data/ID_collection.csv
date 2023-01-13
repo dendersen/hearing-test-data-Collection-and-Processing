@@ -1,7 +1,12 @@
 ID,Gender,Age,HearingLoss,HeadphoneTime,PlaceOfTest,Name
-0,0,16,do not have hearingLoss,4,School,Niels
-1,0,19,do not have hearingLoss,6,School,David
-2,0,18,do not have hearingLoss,2,School,Christoffer
-3,0,48,do not have hearingLoss,1,School,Steen
-4,0,18,do not have hearingLoss,3,School,Gustav
-5,1,19,do not have hearingLoss,3,School,Cuiying
+0,0,16,0,4,School,Niels
+1,0,19,0,6,School,David
+2,0,18,0,2,School,Christoffer
+3,0,48,0,1,School,Steen
+4,0,18,0,3,School,Gustav
+5,1,19,0,3,School,Cuiying
+6,0,19,0,5,School,Noah
+7,1,18,0,0,School,Bingül
+8,0,17,0,5,School,Davud
+9,0,19,0,6,School,Daniel
+10,1,18,0,2,School,Maria

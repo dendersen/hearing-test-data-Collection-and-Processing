@@ -18,10 +18,15 @@ def save_data():
     G = '1'
   else:
     G = '0'
+  
+  if HearingLoss == "do not have hearingLoss":
+    H = '0'
+  else:
+    H = '1'
   data = {'ID': [newID],
           'Gender': [G],
           'Age': [Age],
-          'HearingLoss': [HearingLoss],
+          'HearingLoss': [H],
           'HeadphoneTime': [HeadphoneTime],
           'PlaceOfTest': [PlaceOfTest],
           'Name': [Name],}

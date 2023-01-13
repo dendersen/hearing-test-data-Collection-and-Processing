@@ -1,7 +1,7 @@
 ID,Gender,Age,HearingLoss,HeadphoneTime,PlaceOfTest,Name
 0,0,16,0,4,School,Niels
 1,0,19,0,6,School,David
-2,0,18,0,2,School,Christoffer
+2,0,19,0,2,School,Christoffer
 3,0,48,0,1,School,Steen
 4,0,18,0,3,School,Gustav
 5,1,19,0,3,School,Cuiying
@@ -10,3 +10,6 @@ ID,Gender,Age,HearingLoss,HeadphoneTime,PlaceOfTest,Name
 8,0,17,0,5,School,Davud
 9,0,19,0,6,School,Daniel
 10,1,18,0,2,School,Maria
+11,1,49,0,1,Chris home,Anette
+12,0,53,0,2,Chris home,Steen
+

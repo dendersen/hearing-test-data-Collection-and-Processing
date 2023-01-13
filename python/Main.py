@@ -31,14 +31,14 @@ def runTestSequence(ID,minFrequency,maxFrequency,numberOfTones):
   for x in range(numberOfTones):
     frequency = round(b*a**x)
     print(frequency)
-    # if(random.randint(1,100) <= 70):
-    #   listOfTones.append(ToneObject(frequency,0))
-    # listOfTones.append(ToneObject(frequency,1))
-    # listOfTones.append(ToneObject(frequency,2))
+    if(random.randint(1,100) <= 70):
+      listOfTones.append(ToneObject(0,0))
+    listOfTones.append(ToneObject(frequency,1))
+    listOfTones.append(ToneObject(frequency,2))
     listOfTones.append(ToneObject(frequency,3))
   
-  # random.shuffle(listOfTones)
+  random.shuffle(listOfTones)
   
   for tone in listOfTones:
     runTest(ID,tone.tone,tone.ear)
-    time.sleep(0.1)
+    time.sleep(2)

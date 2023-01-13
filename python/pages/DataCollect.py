@@ -14,13 +14,18 @@ def save_data():
   else:
     newID = 1+IDInformation['ID'].max()
   
+  if Gender == "Woman":
+    G = '1'
+  else:
+    G = '0'
   data = {'ID': [newID],
-          'Name': [Name],
-          'Gender': [Gender],
+          'Gender': [G],
           'Age': [Age],
           'HearingLoss': [HearingLoss],
           'HeadphoneTime': [HeadphoneTime],
-          'PlaceOfTest': [PlaceOfTest]}
+          'PlaceOfTest': [PlaceOfTest],
+          'Name': [Name],}
+  
   
   df = pd.DataFrame(data)
   df.to_csv('Data\ID_collection.csv', mode='a', index=False, header=False)
@@ -33,7 +38,7 @@ with col1:
   st.header('Indput data here')
   
   Name = st.text_input('Name')
-  Gender = st.selectbox('Gender',('Man','Whoman'))
+  Gender = st.selectbox('Gender',('Man','Woman'))
   Age = st.number_input('Age',min_value=0,max_value=150)
   HearingLoss = st.selectbox('HearingLoss',('have been diagnosed with hearingLoss','do not have hearingLoss'))
   HeadphoneTime = st.number_input('HeadphoneTime in hours/day',min_value=0,max_value=24)
@@ -43,11 +48,11 @@ with col1:
   
   Start = st.number_input('Manual input 1',value=200.0)
   Slut = st.number_input('Manual input 2',value=17000.0)
-  minMaxFrequency = st.slider(
-    'Select a range of frequency',
-    0.0, 30000.0, value=(Start,Slut))
+  # minMaxFrequency = st.slider(
+  #   'Select a range of frequency',
+  #   0.0, 30000.0, value=(Start,Slut))
   
-  st.write('Values:', minMaxFrequency)
+  # st.write('Values:', minMaxFrequency)
   
   numberOfTones = st.number_input('Indput number of tones', min_value=2, max_value=100)
   
@@ -56,7 +61,7 @@ with col1:
   if Starter: 
     st.write('Test has been started :smile:')
     id = save_data()
-    Main.runTestSequence(id,minMaxFrequency[0],minMaxFrequency[1],numberOfTones)
+    Main.runTestSequence(id,Start,Slut,numberOfTones)
     st.write('Test done :smile:')
 
 

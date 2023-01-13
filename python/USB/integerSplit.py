@@ -23,6 +23,8 @@ splitPoint = 14750
 
 
 def generateFrequency(inputFrequency:float,earID:int)->tuple[float,str]:
+  if(inputFrequency == 0):
+    return (0,"010010")
   FrequencyMCU = adjustFrequencyToMCU(inputFrequency)
   
   us = round((1/FrequencyMCU*1000)/0.001/4)#us
@@ -43,7 +45,7 @@ def generateFrequency(inputFrequency:float,earID:int)->tuple[float,str]:
     first = "0" + first
   #ser om der er problemer
   if len(second) != 3 or len(first) != 2:
-    raise Exception("length problems")
+    raise Exception("length problems: first=" + str(first) +" second="+ str(second) + " frequency=" + str(inputFrequency))
   
   delayVar = first+second+str(earID)#gør delay til rigtig format
   
@@ -71,8 +73,7 @@ def adjustFrequencyFromMCU(frequency:float):
     return 0.955822478270657*frequency - 383.033822222363
   if(frequency <= 15625):
     return 0.815019728715651*frequency + 301.560149123402
-  if(frequency <= 31250):
-    return 0.552290125081870*frequency + 3042.66738249958
+  return 0.552290125081870*frequency + 3042.66738249958
 
 # -11.71471053 + 1.081337202*frequency
 # max([400.7374078 + 1.046219379*frequency, -11.71471053 + 1.081337202*frequency])

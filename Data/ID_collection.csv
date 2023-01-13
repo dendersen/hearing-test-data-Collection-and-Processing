@@ -1,25 +1,7 @@
 ID,Gender,Age,HearingLoss,HeadphoneTime,PlaceOfTest,Name
-0,,Man,0,have been diagnosed with hearingLoss,0,
-1,,Man,0,have been diagnosed with hearingLoss,0,
-2,,Man,0,have been diagnosed with hearingLoss,0,
-3,,Man,0,have been diagnosed with hearingLoss,0,
-4,,Man,0,have been diagnosed with hearingLoss,0,
-5,,Man,0,have been diagnosed with hearingLoss,0,
-6,,Man,0,have been diagnosed with hearingLoss,0,
-7,,Man,0,have been diagnosed with hearingLoss,0,
-8,,Man,0,have been diagnosed with hearingLoss,0,
-9,,Man,0,have been diagnosed with hearingLoss,0,
-10,,Man,0,have been diagnosed with hearingLoss,0,
-11,,Man,0,have been diagnosed with hearingLoss,0,
-12,,Man,0,have been diagnosed with hearingLoss,0,
-13,,Man,0,have been diagnosed with hearingLoss,0,
-14,,Man,0,have been diagnosed with hearingLoss,0,
-15,,Man,0,have been diagnosed with hearingLoss,0,
-16,,Man,0,have been diagnosed with hearingLoss,0,
-17,,Man,0,have been diagnosed with hearingLoss,0,
-18,,Man,0,have been diagnosed with hearingLoss,0,
-19,,Man,0,have been diagnosed with hearingLoss,0,
-20,,Man,0,have been diagnosed with hearingLoss,0,
-21,,Man,0,have been diagnosed with hearingLoss,0,
-22,,Man,0,have been diagnosed with hearingLoss,0,
-23,,Man,0,have been diagnosed with hearingLoss,0,
+0,0,16,do not have hearingLoss,4,School,Niels
+1,0,19,do not have hearingLoss,6,School,David
+2,0,18,do not have hearingLoss,2,School,Christoffer
+3,0,48,do not have hearingLoss,1,School,Steen
+4,0,18,do not have hearingLoss,3,School,Gustav
+5,1,19,do not have hearingLoss,3,School,Cuiying

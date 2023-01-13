@@ -7,7 +7,7 @@ import plotly.express as px
 def plotter():
   app = Dash(__name__)
   
-  df = pd.read_csv('NewResultStorage.csv')
+  df = pd.read_csv('Data\editResultStorage.csv')
   
   available_plots = df['ID'].unique()
   available_ears = df['Out'].unique()
@@ -84,3 +84,5 @@ def plotter():
     return '```\n'+json.dumps(data, indent=2)+'\n```'
   
   app.run_server(debug=True)
+
+plotter()

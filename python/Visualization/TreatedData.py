@@ -3,20 +3,19 @@ from csv import DictWriter
 
 def Change_Dataform():
   Re = pd.read_csv('Data\FinalResultStorage.csv')
-  Svar = ["None","Left","Right","Both"]
   Ear = ["None","Left","Right","Both"]
-  with open('NewResultStorage.csv', 'a') as f_object:
+  with open('Data\editResultStorage.csv', 'a') as a_object:
     for j in range(0,len(Re)):
       Out = Re.loc[j,'LeftOUT']+Re.loc[j,'RightOUT']*2
       Response = Re.loc[j,'LeftResponse']+Re.loc[j,'RightResponse']*2 # 0 = none, 1 = rightResponse, 2 = lefResponse, 3 = both
       data = {'ID': [Re.loc[j,'ID']],
               'Frekvens': [Re.loc[j,'Frekvens']],
               'Out': [Ear[Out]],
-              'Response': [Svar[Response]],
+              'Response': [Response],
               'AnswerTime': [Re.loc[j,'AnswerTime']]}
       df = pd.DataFrame(data)
       #append data frame to CSV file
-      df.to_csv('NewResultStorage.csv', mode='a', index=False, header=False)
+      df.to_csv('Data\editResultStorage.csv', mode='a', index=False, header=False)
 
 def testSaveData(ID, FrequencyPlayed, earPlayed, Answer, AnswerTime):
   with open('Data\FinalResultStorage.csv', 'a') as f_object:
@@ -43,6 +42,6 @@ def testSaveData(ID, FrequencyPlayed, earPlayed, Answer, AnswerTime):
     ListOfData.to_csv('Data\FinalResultStorage.csv', mode='a', index=False, header=False)
 
 def Clear_Data():
-  f = open("NewResultStorage.csv","w")
+  f = open("editResultStorage.csv","w")
   f.write("ID,Frekvens,Out,Response,AnswerTime\n")
   f.close()

@@ -45,7 +45,7 @@ def plotter():
   
   def update_store_data(Id,width,ear):
     dff = df[df['ID'] == Id]  
-    dfff = dff[dff['Out'] == ear]
+    dfff = dff[dff['Response'] == ear]
     dfff["Frekvens"] = dfff["Frekvens"].astype(str)
     fig = px.scatter(dfff, x='Frekvens', y="AnswerTime",color="Response",height=680)
     fig.update_layout(

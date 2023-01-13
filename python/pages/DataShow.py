@@ -3,29 +3,39 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 #reads data
-df = pd.read_csv('Data\editResultStorage.csv')
-
+data1 = pd.read_csv('Data\editResultStorage.csv')
+data2 = pd.read_csv('Data\ID_collection.csv')
 #make two lists of unique ears and plots
-availablePlots = df['ID'].unique()
-availableEars = df['Out'].unique()
+availablePlots = data1['ID'].unique()
+availableEars = data1['Out'].unique()
 
-st.header('Wiew test results here')
+st.header('View test results here')
 
 #Choose id to show
-idChosen = st.selectbox('Select data to show',availablePlots)
+idChosen = st.selectbox('Select person to show',availablePlots)
 #Choose ear to show
-earChosen = st.selectbox('Select data to show',availableEars)
+earList = ['no ear', 'left ear', 'right ear', 'both ears']
+ears =[earList[i] for i in availableEars]
+earChosen = st.selectbox('Select ear to show',ears)
+#we plot the data
 
-dff = df[df['ID'] == idChosen]  
-dfff = dff[dff['Out'] == earChosen]
-dfff["Frekvens"] = dfff["Frekvens"].astype(str)
+
+st.header('Answers are shown with colors')
+st.write(f'<h1 style="color:#FFFF00;font-size:18px;">{"Yellow = cannot hear (0)"}</h1>', unsafe_allow_html=True)
+st.write(f'<h1 style="color:#FF0000;font-size:18px;">{"Red = Answer in left ear (1)"}</h1>', unsafe_allow_html=True)
+st.write(f'<h1 style="color:#00FF00;font-size:18px;">{"Green = Sound in right ear (2)"}</h1>', unsafe_allow_html=True)
+st.write(f'<h1 style="color:#FFC0CB;font-size:18px;">{"Pink = both ears heard the sound (3)"}</h1>', unsafe_allow_html=True)
+colorList = ['yellow', 'red', 'green', 'pink']
+
+dff = data1[data1['ID'] == idChosen]  
+dfff = dff[dff['Out'] == earList.index(earChosen)]
+
+idData = data2[data2['ID'] == idChosen]
+
 fig, ax = plt.subplots()
-ax.scatter(dff['Frekvens'], dff["AnswerTime"],c=dff["Response"])
-ax.update_layout(
-    margin=dict(l=20, r=20, t=20, b=20),
-    paper_bgcolor="LightSteelBlue",)
-ax.update_traces(marker=dict(size=18,
-                  line=dict(width=2,
-                    color='DarkSlateGrey')),
-                  selector=dict(mode='markers'))
+ax.scatter(dfff['Frekvens'], dfff["AnswerTime"],c=[colorList[i] for i in dfff["Response"]])
+ax.set_title('| Data of ID: '+str(idChosen)+' | Name: '+ str(idData['Name'].item()) +' | Currently showing '+ str(earChosen)+' |', color="red")
+ax.set_xlabel('Frequency')
+ax.set_ylabel('Answer time in ms')
+ax.set_facecolor('darkblue')
 st.pyplot(fig)

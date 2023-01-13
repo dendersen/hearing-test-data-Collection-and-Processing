@@ -3,14 +3,13 @@ from csv import DictWriter
 
 def Change_Dataform():
   Re = pd.read_csv('Data\FinalResultStorage.csv')
-  Ear = ["None","Left","Right","Both"]
   with open('Data\editResultStorage.csv', 'a') as a_object:
     for j in range(0,len(Re)):
       Out = Re.loc[j,'LeftOUT']+Re.loc[j,'RightOUT']*2
       Response = Re.loc[j,'LeftResponse']+Re.loc[j,'RightResponse']*2 # 0 = none, 1 = rightResponse, 2 = lefResponse, 3 = both
       data = {'ID': [Re.loc[j,'ID']],
               'Frekvens': [Re.loc[j,'Frekvens']],
-              'Out': [Ear[Out]],
+              'Out': [Out],
               'Response': [Response],
               'AnswerTime': [Re.loc[j,'AnswerTime']]}
       df = pd.DataFrame(data)
@@ -45,3 +44,5 @@ def Clear_Data():
   f = open("editResultStorage.csv","w")
   f.write("ID,Frekvens,Out,Response,AnswerTime\n")
   f.close()
+Clear_Data()
+Change_Dataform()

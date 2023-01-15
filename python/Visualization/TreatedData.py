@@ -41,7 +41,7 @@ def testSaveData(ID, FrequencyPlayed, earPlayed, Answer, AnswerTime):
     ListOfData.to_csv('Data\FinalResultStorage.csv', mode='a', index=False, header=False)
 
 def Clear_Data():
-  f = open("editResultStorage.csv","w")
+  f = open("Data\editResultStorage.csv","w")
   f.write("ID,Frekvens,Out,Response,AnswerTime\n")
   f.close()
 Clear_Data()

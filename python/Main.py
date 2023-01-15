@@ -39,6 +39,9 @@ def runTestSequence(ID,minFrequency,maxFrequency,numberOfTones):
   
   random.shuffle(listOfTones)
   
+  i=0
   for tone in listOfTones:
+    print('Der er '+str(len(listOfTones)-i)+' toner tilbage')
+    i += 1
     runTest(ID,tone.tone,tone.ear)
     time.sleep(2)

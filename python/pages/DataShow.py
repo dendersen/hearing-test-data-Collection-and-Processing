@@ -97,7 +97,7 @@ for i in ax[0].patches:
   totals.append(i.get_width())
 total = sum(totals)
 for i in ax[0].patches:
-  ax[0].text(i.get_width()+.3, i.get_y()+.20, str(round((i.get_width()/total)*100, 2))+'%', fontsize=10, color='black')
+  ax[0].text(i.get_width()+.3, i.get_y()+.20, str(round((i.get_width()/total)*100, 2))+'%', fontsize=12, color='black')
 ax[0].set_title('No ear', color = 'red')
 
 
@@ -107,7 +107,7 @@ for i in ax[1].patches:
   totals.append(i.get_width())
 total = sum(totals)
 for i in ax[1].patches:
-  ax[1].text(i.get_width()+.3, i.get_y()+.20, str(round((i.get_width()/total)*100, 2))+'%', fontsize=10, color='black')
+  ax[1].text(i.get_width()+.3, i.get_y()+.20, str(round((i.get_width()/total)*100, 2))+'%', fontsize=12, color='black')
 ax[1].set_title('\n Left ear',color = 'purple')
 
 ax[2].barh(answerListRightEar,rightEarAnswer.value_counts(),color = 'darkgreen')
@@ -116,7 +116,7 @@ for i in ax[2].patches:
   totals.append(i.get_width())
 total = sum(totals)
 for i in ax[2].patches:
-  ax[2].text(i.get_width()+.3, i.get_y()+.20, str(round((i.get_width()/total)*100, 2))+'%', fontsize=10, color='black')
+  ax[2].text(i.get_width()+.3, i.get_y()+.20, str(round((i.get_width()/total)*100, 2))+'%', fontsize=12, color='black')
 ax[2].set_title('\n Right ear',color = 'darkgreen')
 
 ax[3].barh(answerListBothEar,bothEarAnswer.value_counts(),color = 'blue')
@@ -125,6 +125,6 @@ for i in ax[3].patches:
   totals.append(i.get_width())
 total = sum(totals)
 for i in ax[3].patches:
-  ax[3].text(i.get_width()+.3, i.get_y()+.20, str(round((i.get_width()/total)*100, 2))+'%', fontsize=10, color='black')
+  ax[3].text(i.get_width()+.3, i.get_y()+.20, str(round((i.get_width()/total)*100, 2))+'%', fontsize=12, color='black')
 ax[3].set_title('\n Both ears',color = 'blue')
 st.pyplot(fig)

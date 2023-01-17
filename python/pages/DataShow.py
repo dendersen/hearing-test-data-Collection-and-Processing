@@ -134,3 +134,28 @@ for i in ax[3].patches:
   ax[3].text(i.get_width()+.3, i.get_y()+.20, str(round((i.get_width()/total)*100, 2))+'%', fontsize=12, color='black')
 ax[3].set_title('\n Both ears',color = 'blue')
 st.pyplot(fig)
+
+st.header('Overall stats')
+
+#we make a list of unique frequencies and sort it
+listOfFreaquency = data1['Frekvens'].sort_values().unique()
+
+#plot of frequency and how many test we have with it 
+fig, ax = plt.subplots(ncols=1,nrows=1)
+ax.plot(listOfFreaquency,data1['Frekvens'].value_counts())
+ax.set_title('Amount of test at given frequency')
+ax.set_ylabel('Times frequency is used')
+ax.set_xlabel('Frequency')
+st.pyplot(fig)
+
+#we make a list of how many time the correct answer is given to a specific frequency
+listOfAccuracy = [1 if data1['Out'][i] == data1['Response'][i] else 0 for i in range(len(data1))]
+
+listOfFreaquencyAccuracy = pd.DataFrame()
+# for i in range(len(data1)):
+#   CurrentFreaquenzy = data1['Frekvens'][i]
+  
+#   data1['Frekvens'][i]
+# listOfFreaquencyAccuracy = data1['Frekvens']
+# listOfFreaquencyAccuracy[0] = listOfFreaquencyAccuracy[0]
+# st.write(listOfFreaquencyAccuracy[0])

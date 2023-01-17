@@ -204,9 +204,6 @@ def bivariate_plot(dtf, x, y, max_cat=20, figsize=(10,5)):
             ax.set(ylabel=y)
             ax.right_ax.set_ylabel("Observazions in each bin")
             plt.show()
-            ### joint plot
-            sns.jointplot(x=x, y=y, data=dtf, dropna=True, kind='reg', height=int((figsize[0]+figsize[1])/2) )
-            plt.show()
         
         ## cat vs cat --> hist count + hist %
         elif (utils_recognize_type(dtf, x, max_cat) == "cat") & (utils_recognize_type(dtf, y, max_cat) == "cat"):  

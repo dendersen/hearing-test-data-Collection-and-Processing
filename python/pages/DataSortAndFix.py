@@ -31,24 +31,28 @@ if Data:
     print('Categerocial = blue, Numerical/DateTime = red, NaN = white')
 
 index = st.text_input('Chose Index if needed')
-predict = st.text_input('Chose what you want to predict, colum name shoud become "Y"')
+predict = st.text_input('Chose what you want to predict')
 if index:
   dtf = dtf.set_index(index)
 
 if predict:
-  #We rename the collum we want to predict
-  dtf = dtf.rename(columns={predict:"Y"})
   st.write("Distribution of predict")
-  st.pyplot(freqdist_plot(dtf, "Y", figsize=(5,3)))
+  st.pyplot(freqdist_plot(dtf, predict, figsize=(10,5)))
   st.write(dtf.head())
   st.write("Chose data to check wheter or not is Predictive")
   predictive = st.text_input('Collum name of checked')
-  if predictive: 
-    st.pyplot(bivariate_plot(dtf, x=predictive, y="Y", figsize=(15,5)))
+  if predictive:
+    dtfNoIndex = dtf.reset_index()
+    st.pyplot(bivariate_plot(dtf, x=predictive, y=predict, figsize=(15,5)))
+    
+    if (utils_recognize_type(dtf, predictive, 20) == "num") & (utils_recognize_type(dtf, predict, 20) == "num"):
+      ## joint plot
+      st.pyplot(sns.jointplot(x=predictive, y=predict, data=dtfNoIndex, dropna=True, kind='reg', height=int((15+5)/2)))
+    
     st.write("The correlation, if the p-value is small enough (<0.05) the null hypothesis of samples means equality can be rejected.")
     output = st.empty()
     with st_capture(output.code):
-      test_corr(dtf,x=predictive,y="Y")
+      test_corr(dtf,x=predictive,y=predict)
     addfeature = st.button('If p-value is <0.05 add to features')
     if addfeature:
       features.append(predictive)
@@ -58,9 +62,10 @@ if predict:
     features.clear()
   st.title('If all whised features are chosen, continue')
   st.write('Here is the chosen features')
-  dtf = dtf[features+["Y"]]
+  dtf = dtf[features+[predict]]
   st.write(dtf.head())
-  st.write('We can now go to preprocessing')
+  st.write('We can now go to preprocessing, value we want to predict is now Y')
+  dtf = dtf.rename(columns={predict:"Y"})
   output = st.empty()
   with st_capture(output.code):
     data_preprocessing(dtf, y="Y")
@@ -103,11 +108,11 @@ if predict:
       dtf_test.to_csv(f,header=True)
 
   # #We chose the data we wish to train with, X_train should not contain the output values so we remove them
-  # X_names = dtf_train.drop("Y", axis=1).columns.tolist()
-  # X_train = dtf_train.drop("Y", axis=1).values
-  # y_train = dtf_train["Y"].values
-  # X_test = dtf_test.drop("Y", axis=1).values
-  # y_test = dtf_test["Y"].values
+  # X_names = dtf_train.drop(predict, axis=1).columns.tolist()
+  # X_train = dtf_train.drop(predict, axis=1).values
+  # y_train = dtf_train[predict].values
+  # X_test = dtf_test.drop(predict, axis=1).values
+  # y_test = dtf_test[predict].values
   # st.write(X_test.shape)
   # st.title('Neural Network')
   # #Defines the metrics

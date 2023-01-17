@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 import Visualization.TreatedData as VT
 
@@ -151,11 +152,25 @@ st.pyplot(fig)
 #we make a list of how many time the correct answer is given to a specific frequency
 listOfAccuracy = [1 if data1['Out'][i] == data1['Response'][i] else 0 for i in range(len(data1))]
 
-listOfFreaquencyAccuracy = pd.DataFrame()
-# for i in range(len(data1)):
-#   CurrentFreaquenzy = data1['Frekvens'][i]
-  
-#   data1['Frekvens'][i]
-# listOfFreaquencyAccuracy = data1['Frekvens']
-# listOfFreaquencyAccuracy[0] = listOfFreaquencyAccuracy[0]
-# st.write(listOfFreaquencyAccuracy[0])
+listOfFreaquencyAccuracy = pd.DataFrame(0,index=range(len(listOfFreaquency)),columns=list('AB'))
+for i in range(len(data1)):
+  CurrentFreaquenzy = data1['Frekvens'][i]
+  indexOfFreaquenzy = np.where(listOfFreaquency == CurrentFreaquenzy)
+  if listOfAccuracy[i] == 0:
+    listOfFreaquencyAccuracy.loc[indexOfFreaquenzy[0][0],'A'] = listOfFreaquencyAccuracy['A'][indexOfFreaquenzy[0][0]]+1
+  else:
+    listOfFreaquencyAccuracy.loc[indexOfFreaquenzy[0][0],'B'] = listOfFreaquencyAccuracy['B'][indexOfFreaquenzy[0][0]]+1
+
+for i in range(len(listOfFreaquencyAccuracy)):
+  count = listOfFreaquencyAccuracy['A'][i]+listOfFreaquencyAccuracy['B'][i]
+  listOfFreaquencyAccuracy.loc[i,'A'] = listOfFreaquencyAccuracy['A'][i]/count*100
+  listOfFreaquencyAccuracy.loc[i,'B'] = listOfFreaquencyAccuracy['B'][i]/count*100
+
+fig, ax = plt.subplots(ncols=1,nrows=7,figsize = (10,30))
+ax[0].set_title('Accurazy of freaquencies')
+
+for i in range(7):
+  ax[i].plot(listOfFreaquency[round(len(listOfFreaquency)*i/7):round(len(listOfFreaquency)*(i+1)/7)],listOfFreaquencyAccuracy['B'][round(len(listOfFreaquency)*i/7):round(len(listOfFreaquency)*(i+1)/7)])
+  ax[i].set_ylabel('Accurazy in %')
+  ax[i].set_xlabel('Frequency')
+st.pyplot(fig)

@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
+import Visualization.TreatedData as VT
 
 #reads data
 data1 = pd.read_csv('Data\editResultStorage.csv')
@@ -10,6 +11,11 @@ availablePlots = data1['ID'].unique()
 availableEars = data1['Out'].unique()
 
 st.header('View test results here')
+
+update = st.button('Update data')
+if update:
+  VT.Clear_Data()
+  VT.Change_Dataform()
 
 #Choose id to show
 idChosen = st.selectbox('Select person to show',availablePlots)

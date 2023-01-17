@@ -44,5 +44,3 @@ def Clear_Data():
   f = open("editResultStorage.csv","w")
   f.write("ID,Frekvens,Out,Response,AnswerTime\n")
   f.close()
-Clear_Data()
-Change_Dataform()

@@ -93,11 +93,11 @@ else:
   #we plot the data
   
   st.header('Answers are shown with colors')
-  st.write(f'<h1 style="color:#FF0000;font-size:18px;">{"Red = cannot hear (0)"}</h1>', unsafe_allow_html=True)
-  st.write(f'<h1 style="color:#A020F0;font-size:18px;">{"Purple = Answer in left ear (1)"}</h1>', unsafe_allow_html=True)
+  st.write(f'<h1 style="color:#0000FF;font-size:18px;">{"Blue = cannot hear (0)"}</h1>', unsafe_allow_html=True)
+  st.write(f'<h1 style="color:#FFA500;font-size:18px;">{"Orange = Answer in left ear (1)"}</h1>', unsafe_allow_html=True)
   st.write(f'<h1 style="color:#00FF00;font-size:18px;">{"Green = Sound in right ear (2)"}</h1>', unsafe_allow_html=True)
-  st.write(f'<h1 style="color:#0000FF;font-size:18px;">{"Blue = both ears heard the sound (3)"}</h1>', unsafe_allow_html=True)
-  colorList = ['red', 'purple', 'darkgreen', 'blue']
+  st.write(f'<h1 style="color:#FF0000;font-size:18px;">{"Red = both ears heard the sound (3)"}</h1>', unsafe_allow_html=True)
+  colorList = ['blue','orange','darkgreen','red']
   
   dff = data1[data1['ID'] == idChosen]  
   dfff = dff[dff['Out'] == earList.index(earChosen)]
@@ -112,6 +112,29 @@ else:
   st.pyplot(fig)
   
   st.header('Genneral data analysis')
+  
+  #plot of correct answers against the actual answer
+  fig, ax = plt.subplots(1, 2,  sharex=False, sharey=False, figsize=(15,10))
+  fig.suptitle('Correct answer'+"   vs   "+'Response', fontsize=20)
+  ### count
+  ax[0].title.set_text('count')
+  order = dff.groupby(['Out','Response'])['Response'].count()
+  order = order.reset_index(name = 'count')
+  sns.barplot(data=order, x='Out', y='count', hue='Response', ax=ax[0])
+  ax[0].grid(True)
+  ### percentage
+  ax[1].title.set_text('percentage')
+  a = dff.groupby('Out')['Response'].count().reset_index()
+  a = a.rename(columns={'Response':"tot"})
+  b = dff.groupby(['Out','Response'])['Response'].count()
+  b = b.reset_index(name = 'count')
+  b = b.rename(columns={'count':0}).reset_index()
+  b = b.merge(a, how="left")
+  b["%"] = b[0] / b["tot"] *100
+  sns.barplot(x='Out', y="%", hue='Response', data=b, ax=ax[1]).get_legend().remove()
+  ax[1].grid(True)
+  ### fix figure
+  st.pyplot(fig)
   
   #Evalf correct responses
   index = dff.index
@@ -156,23 +179,23 @@ else:
   
   st.write(f'<h1 style="color:#00000;font-size:22px;">{"Correctness of answers"}</h1>', unsafe_allow_html=True)
   fig, ax = plt.subplots(nrows=4, sharex=False, sharey=False, figsize = (10,14))
-  ax[0].barh(answerListNoEar,noEarAnswer.value_counts().sort_index(), color = 'red')
+  ax[0].barh(answerListNoEar,noEarAnswer.value_counts().sort_index(), color = 'blue')
   totals = []
   for i in ax[0].patches:
     totals.append(i.get_width())
   total = sum(totals)
   for i in ax[0].patches:
     ax[0].text(i.get_width()+.3, i.get_y()+.20, str(round((i.get_width()/total)*100, 2))+'%', fontsize=12, color='black')
-  ax[0].set_title('No ear', color = 'red')
+  ax[0].set_title('No ear', color = 'blue')
   
-  ax[1].barh(answerListLeftEar,leftEarAnswer.value_counts().sort_index(),color = 'purple')
+  ax[1].barh(answerListLeftEar,leftEarAnswer.value_counts().sort_index(),color = 'orange')
   totals = []
   for i in ax[1].patches:
     totals.append(i.get_width())
   total = sum(totals)
   for i in ax[1].patches:
     ax[1].text(i.get_width()+.3, i.get_y()+.20, str(round((i.get_width()/total)*100, 2))+'%', fontsize=12, color='black')
-  ax[1].set_title('\n Left ear',color = 'purple')
+  ax[1].set_title('\n Left ear',color = 'orange')
   
   ax[2].barh(answerListRightEar,rightEarAnswer.value_counts().sort_index(),color = 'darkgreen')
   totals = []
@@ -183,12 +206,43 @@ else:
     ax[2].text(i.get_width()+.3, i.get_y()+.20, str(round((i.get_width()/total)*100, 2))+'%', fontsize=12, color='black')
   ax[2].set_title('\n Right ear',color = 'darkgreen')
   
-  ax[3].barh(answerListBothEar,bothEarAnswer.value_counts().sort_index(),color = 'blue')
+  ax[3].barh(answerListBothEar,bothEarAnswer.value_counts().sort_index(),color = 'red')
   totals = []
   for i in ax[3].patches:
     totals.append(i.get_width())
   total = sum(totals)
   for i in ax[3].patches:
     ax[3].text(i.get_width()+.3, i.get_y()+.20, str(round((i.get_width()/total)*100, 2))+'%', fontsize=12, color='black')
-  ax[3].set_title('\n Both ears',color = 'blue')
+  ax[3].set_title('\n Both ears',color = 'red')
+  st.pyplot(fig)
+  
+  #we make a list of unique frequencies and sort it
+  listOfFreaquency = dff['Frekvens'].sort_values().unique()
+  
+  #we make a list of how many time the correct answer is given to a specific frequency
+  listOfAccuracy = [1 if dff['Out'][index[i]] == dff['Response'][index[i]] else 0 for i in range(len(dff))]
+  
+  listOfFreaquencyAccuracy = pd.DataFrame(0,index=range(len(listOfFreaquency)),columns=list('AB'))
+  for i in range(len(dff)):
+    CurrentFreaquenzy = dff['Frekvens'][index[i]]
+    indexOfFreaquenzy = np.where(listOfFreaquency == CurrentFreaquenzy)
+    if listOfAccuracy[i] == 0:
+      listOfFreaquencyAccuracy.loc[indexOfFreaquenzy[0][0],'A'] = listOfFreaquencyAccuracy['A'][indexOfFreaquenzy[0][0]]+1
+    else:
+      listOfFreaquencyAccuracy.loc[indexOfFreaquenzy[0][0],'B'] = listOfFreaquencyAccuracy['B'][indexOfFreaquenzy[0][0]]+1
+  
+  for i in range(len(listOfFreaquencyAccuracy)):
+    count = listOfFreaquencyAccuracy['A'][i]+listOfFreaquencyAccuracy['B'][i]
+    listOfFreaquencyAccuracy.loc[i,'A'] = listOfFreaquencyAccuracy['A'][i]/count*100
+    listOfFreaquencyAccuracy.loc[i,'B'] = listOfFreaquencyAccuracy['B'][i]/count*100
+  
+  # st.write(listOfFreaquency)
+  # st.write(listOfFreaquencyAccuracy)
+  fig, ax = plt.subplots(ncols=1,nrows=2,figsize = (10,20))
+  ax[0].set_title('Accuracy of freaquencies')
+  
+  for i in range(2):
+    ax[i].plot(listOfFreaquency[round(len(listOfFreaquency)*i/2):round(len(listOfFreaquency)*(i+1)/2)],listOfFreaquencyAccuracy['B'][round(len(listOfFreaquency)*i/2):round(len(listOfFreaquency)*(i+1)/2)])
+    ax[i].set_ylabel('Accuracy in %')
+    ax[i].set_xlabel('Frequency')
   st.pyplot(fig)

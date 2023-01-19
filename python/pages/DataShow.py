@@ -12,6 +12,11 @@ data2 = pd.read_csv('Data\ID_collection.csv')
 availablePlots = data1['ID'].unique()
 availableEars = data1['Out'].unique()
 
+update = st.button('Update data')
+if update:
+  VT.Clear_Data()
+  VT.Change_Dataform()
+
 whatToShow = st.selectbox('How to show data',('Over all stats','Individual results'))
 if whatToShow == 'Over all stats':
   st.header('Overall stats')
@@ -78,11 +83,6 @@ if whatToShow == 'Over all stats':
   st.pyplot(fig)
 else:
   st.header('Individual results here')
-  
-  update = st.button('Update data')
-  if update:
-    VT.Clear_Data()
-    VT.Change_Dataform()
   
   #Choose id to show
   idChosen = st.selectbox('Select person to show',availablePlots)

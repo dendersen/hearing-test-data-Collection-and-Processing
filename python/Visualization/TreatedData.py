@@ -1,6 +1,22 @@
 import pandas as pd
 from csv import DictWriter
 
+def responseCheck(response:int, correct:int)->list[bool,bool]:
+  """returns the correctnes on the left ear and right ear
+
+  Args:
+      response (int): what the user answeres
+      correct (int): what the correct answer was
+
+  Returns:
+      list[bool,bool]: left ear, right ear
+  """
+  out:list[int]=[]
+  out.append( 1 if (response % 2 == correct % 2) else 0) #left
+  out.append( 1 if (response - response % 2 == correct - correct % 2)  else 0)#right
+  return (out)
+  
+
 def Change_Dataform():
   finalResults = pd.read_csv('Data\FinalResultStorage.csv')
   idInformation = pd.read_csv('Data\ID_collection.csv')
@@ -9,16 +25,19 @@ def Change_Dataform():
       currentID = finalResults.loc[j,'ID']
       idInformationOfSpecificID = idInformation[idInformation['ID'] == currentID]
       Gender = idInformationOfSpecificID['Gender'].values
-      Age = idInformationOfSpecificID['Age'].values
+      Age:int = idInformationOfSpecificID['Age'].values
       HearingLoss = idInformationOfSpecificID['HearingLoss'].values
       HeadphoneTime = idInformationOfSpecificID['HeadphoneTime'].values
       
       Out = finalResults.loc[j,'LeftOUT']+finalResults.loc[j,'RightOUT']*2
-      Response = finalResults.loc[j,'LeftResponse']+finalResults.loc[j,'RightResponse']*2 # 0 = none, 1 = rightResponse, 2 = lefResponse, 3 = both
+      Response = finalResults.loc[j,'LeftResponse']+finalResults.loc[j,'RightResponse']*2 # 0 = none, 1 = leftResponse, 2 = rightResponse, 3 = both
+      leftCorrect,rightCorrect = responseCheck(Response,Out)
       data = {'ID': [finalResults.loc[j,'ID']],
               'Frekvens': [finalResults.loc[j,'Frekvens']],
               'Out': [Out],
               'Response': [Response],
+              'rightCorrect': [rightCorrect],
+              'leftCorrect':[leftCorrect],
               'AnswerTime': [finalResults.loc[j,'AnswerTime']],
               'Gender': Gender,
               'Age': Age,
@@ -55,5 +74,5 @@ def testSaveData(ID, FrequencyPlayed, earPlayed, Answer, AnswerTime):
 
 def Clear_Data():
   f = open("Data\editResultStorage.csv","w")
-  f.write("ID,Frekvens,Out,Response,AnswerTime,Gender,Age,HearingLoss,HeadphoneTime\n")
+  f.write("ID,Frekvens,Out,Response,rightCorrect,leftCorrect,AnswerTime,Gender,Age,HearingLoss,HeadphoneTime\n")
   f.close()

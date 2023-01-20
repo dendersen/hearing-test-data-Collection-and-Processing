@@ -1,5 +1,5 @@
 ID,Gender,Age,HearingLoss,HeadphoneTime,PlaceOfTest,Name
-0,0,16,0,4,School,Niels
+0,0,18,0,4,School,Niels
 1,0,19,0,6,School,David
 2,0,19,0,2,School,Christoffer
 3,0,48,0,1,School,Steen
@@ -30,3 +30,4 @@ ID,Gender,Age,HearingLoss,HeadphoneTime,PlaceOfTest,Name
 28,0,19,0,1,School,Luca
 29,0,20,1,5,School,Abdullah
 30,0,18,0,7,School,Sebastian
+31,0,41,1,1,School,Henrik

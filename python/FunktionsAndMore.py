@@ -854,10 +854,13 @@ def colorGenerator(numberOfColors:int):
   posibleCombinations+=255#red up
   posibleCombinations+=255#blue down
   
-  rgbd:list[int] = [255,0,0,2]
-  rgbd = split(rgbd[0],rgbd[1],rgbd[2],rgbd[3],posibleCombinations//numberOfColors)
-  
-  return "#" + hex(rgbd[0]) + hex(rgbd[1]) + hex(rgbd[2])
+  colors = []
+  for i in range(0,numberOfColors):
+    rgbd:list[int] = [255,0,0,2]
+    rgbd = split(rgbd[0],rgbd[1],rgbd[2],rgbd[3],posibleCombinations//numberOfColors)
+    colors.append("#" + hex(rgbd[0]) + hex(rgbd[1]) + hex(rgbd[2]))
+  return colors
+
 
 def split(r,g,b,direction,difference):
   if(direction == 0):

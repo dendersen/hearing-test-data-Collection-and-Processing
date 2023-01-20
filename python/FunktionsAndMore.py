@@ -859,9 +859,15 @@ def colorGenerator(numberOfColors:int):
   for i in range(0,numberOfColors):
     rgbd = split(rgbd[0],rgbd[1],rgbd[2],rgbd[3],posibleCombinations//numberOfColors)
     try:
-        colors.append(("#" + hex(rgbd[0]) + hex(rgbd[1]) + hex(rgbd[2])).replace("0x",""))
+      r:str=hex(rgbd[0])
+      g:str=hex(rgbd[1])
+      b:str=hex(rgbd[2])
+      for i in [r,g,b]:
+        if(len(i) != 2):
+          i="0"+i
+      colors.append(("#" + r + g + b).replace("0x",""))
     except:
-        print(rgbd[0],rgbd[1],rgbd[2])
+      print(rgbd[0],rgbd[1],rgbd[2])
   return colors
 
 

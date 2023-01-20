@@ -835,7 +835,6 @@ def explainer_shap(model, X_names, X_instance, X_train=None, task="classificatio
         
         
         
-
 def colorGenerator(numberOfColors:int):
   """_summary_
 
@@ -859,13 +858,18 @@ def colorGenerator(numberOfColors:int):
   for i in range(0,numberOfColors):
     rgbd = split(rgbd[0],rgbd[1],rgbd[2],rgbd[3],posibleCombinations//numberOfColors)
     try:
-      r:str=hex(rgbd[0])
-      g:str=hex(rgbd[1])
-      b:str=hex(rgbd[2])
-      for i in [r,g,b]:
-        if(len(i) != 2):
-          i="0"+i
-      colors.append(("#" + r + g + b).replace("0x",""))
+      r:str=hex(rgbd[0]).replace("0x","")
+      g:str=hex(rgbd[1]).replace("0x","")
+      b:str=hex(rgbd[2]).replace("0x","")
+      
+      if(len(r) < 2):
+        r="0"+r
+      if(len(g) < 2):
+        g="0"+g
+      if(len(b) < 2):
+        b="0"+b
+      
+      colors.append(("#" + r + g + b))
     except:
       print(rgbd[0],rgbd[1],rgbd[2])
   return colors

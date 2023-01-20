@@ -212,7 +212,7 @@ if option == "Not binary":
     # Fit the model
     history = model.fit(X_train, 
                           y_train,
-                          epochs=2,
+                          epochs=500,
                           validation_data=(X_test, y_test))
     #We print the summary
     output = st.empty()

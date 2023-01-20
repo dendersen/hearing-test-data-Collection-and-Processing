@@ -212,7 +212,7 @@ if option == "Not binary":
     # Fit the model
     history = model.fit(X_train, 
                           y_train,
-                          epochs=500,
+                          epochs=2,
                           validation_data=(X_test, y_test))
     #We print the summary
     output = st.empty()
@@ -239,6 +239,7 @@ if option == "Not binary":
     # Prediction Probabilities
     y_prob = model.predict(X_test) 
     ColorList = colorGenerator(100)
+    print(ColorList)
     for i in range(len(X_test)):
       plt.scatter(x=X_test[i][0],y=X_test[i][1],c=ColorList[label_names[tf.argmax(y_prob[i])]])
     st.pyplot(plt.show())

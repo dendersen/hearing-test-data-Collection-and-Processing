@@ -855,53 +855,57 @@ def colorGenerator(numberOfColors:int):
   posibleCombinations+=255#blue down
   
   colors = []
+  rgbd:list[int] = [255,0,0,2]
   for i in range(0,numberOfColors):
-    rgbd:list[int] = [255,0,0,2]
     rgbd = split(rgbd[0],rgbd[1],rgbd[2],rgbd[3],posibleCombinations//numberOfColors)
-    colors.append("#" + hex(rgbd[0]) + hex(rgbd[1]) + hex(rgbd[2]))
+    try:
+        colors.append(("#" + hex(rgbd[0]) + hex(rgbd[1]) + hex(rgbd[2])).replace("0x",""))
+    except:
+        print(rgbd[0],rgbd[1],rgbd[2])
   return colors
 
 
-def split(r,g,b,direction,difference):
+def split(r:int,g:int,b:int,direction:int,difference:int):
   if(direction == 0):
     r+=difference
     if(r>255):
       g+=r%255
       r=255
       direction+=1
-      return [r,g,b,direction]
+    return [r,g,b,direction]
   if(direction == 1):
     b-=difference
     if(b<0):
       g+=abs(b)
       b=0
       direction+=1
-      return [r,g,b,direction]
+    return [r,g,b,direction]
   if(direction == 2):
     g+=difference
     if(g>255):
       r-=g%255
       g=255
       direction+=1
-      return [r,g,b,direction]
+    return [r,g,b,direction]
   if(direction == 3):
     r-=difference
     if(r<0):
       b+=abs(r)
       r=0
       direction+=1
-      return [r,g,b,direction]
+    return [r,g,b,direction]
   if(direction == 4):
     b+=difference
     if(b>255):
       g-=b%255
       b=255
       direction+=1
-      return [r,g,b,direction]
+    return [r,g,b,direction]
   if(direction == 5):
     g-=difference
     if(g<0):
       r+=abs(g)
       g=0
       direction=0
-      return [r,g,b,direction]
+    return [r,g,b,direction]
+  return [r,g,b,direction]

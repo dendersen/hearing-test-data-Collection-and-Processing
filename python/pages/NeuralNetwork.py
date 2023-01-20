@@ -154,21 +154,42 @@ if option == "Binary":
 
 if option == "Not binary":
   st.write('Shown down below is the different labels')
+  IdData = pd.read_csv('Data\ID_collection.csv')
   st.write(np.unique(y_test))
   #We store labels
-  label_names = np.unique(y_test)
+  label_names = np.unique(IdData['Age'])
   #We make the model:
   # Set random seed
   tf.random.set_seed(19)
   # Create the model
   #Here you assume an input dataset of N features and 1 binary target variable
   NFeatures = int(st.number_input('Add exstra features',value=len(dtf_train.columns)-1))
-  labels = st.number_input("Write the amount of labels",value=len(np.unique(y_test)))
+  labels = st.number_input("Write the amount of labels",value=len(np.unique(IdData['Age'])))
   #If extra units are needed
   AddExstraUnits = int(st.number_input('Add exstra units',value=6))
   AU = AddExstraUnits
   # Output is 1 of the x possible labels
   model = tf.keras.Sequential([  
+    tf.keras.layers.Dense(4+AU, activation="relu"),
+    tf.keras.layers.Dense(4+AU, activation="relu"),
+    tf.keras.layers.Dense(4+AU, activation="relu"),
+    tf.keras.layers.Dense(4+AU, activation="relu"),
+    tf.keras.layers.Dense(4+AU, activation="relu"),
+    tf.keras.layers.Dense(4+AU, activation="relu"),
+    tf.keras.layers.Dense(4+AU, activation="relu"),
+    tf.keras.layers.Dense(4+AU, activation="relu"),
+    tf.keras.layers.Dense(4+AU, activation="relu"),
+    tf.keras.layers.Dense(4+AU, activation="relu"),
+    tf.keras.layers.Dense(4+AU, activation="relu"),
+    tf.keras.layers.Dense(4+AU, activation="relu"),
+    tf.keras.layers.Dense(4+AU, activation="relu"),
+    tf.keras.layers.Dense(4+AU, activation="relu"),
+    tf.keras.layers.Dense(4+AU, activation="relu"),
+    tf.keras.layers.Dense(4+AU, activation="relu"),
+    tf.keras.layers.Dense(4+AU, activation="relu"),
+    tf.keras.layers.Dense(4+AU, activation="relu"),
+    tf.keras.layers.Dense(4+AU, activation="relu"),
+    tf.keras.layers.Dense(4+AU, activation="relu"),
     tf.keras.layers.Dense(4+AU, activation="relu"),
     tf.keras.layers.Dense(4+AU, activation="relu"),
     tf.keras.layers.Dense(4+AU, activation="relu"),
@@ -217,7 +238,7 @@ if option == "Not binary":
     st.write('Output of network shown here, not alway 2D')
     # Prediction Probabilities
     y_prob = model.predict(X_test) 
-    ColorList = ["black","green","red","orange","blue","pink","olive","cyan","purple","gold","crimson"]
+    ColorList = ["black","green","red","orange","blue","pink","olive","cyan","purple","gold","crimson","#AAAAAA"]
     for i in range(len(X_test)):
       plt.scatter(x=X_test[i][0],y=X_test[i][1],c=ColorList[label_names[tf.argmax(y_prob[i])]])
     st.pyplot(plt.show())

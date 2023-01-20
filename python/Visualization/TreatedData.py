@@ -2,16 +2,29 @@ import pandas as pd
 from csv import DictWriter
 
 def Change_Dataform():
-  Re = pd.read_csv('Data\FinalResultStorage.csv')
+  finalResults = pd.read_csv('Data\FinalResultStorage.csv')
+  idInformation = pd.read_csv('Data\ID_collection.csv')
   with open('Data\editResultStorage.csv', 'a') as a_object:
-    for j in range(0,len(Re)):
-      Out = Re.loc[j,'LeftOUT']+Re.loc[j,'RightOUT']*2
-      Response = Re.loc[j,'LeftResponse']+Re.loc[j,'RightResponse']*2 # 0 = none, 1 = rightResponse, 2 = lefResponse, 3 = both
-      data = {'ID': [Re.loc[j,'ID']],
-              'Frekvens': [Re.loc[j,'Frekvens']],
+    for j in range(0,len(finalResults)):
+      currentID = finalResults.loc[j,'ID']
+      idInformationOfSpecificID = idInformation[idInformation['ID'] == currentID]
+      Gender = idInformationOfSpecificID['Gender'].values
+      Age = idInformationOfSpecificID['Age'].values
+      HearingLoss = idInformationOfSpecificID['HearingLoss'].values
+      HeadphoneTime = idInformationOfSpecificID['HeadphoneTime'].values
+      
+      Out = finalResults.loc[j,'LeftOUT']+finalResults.loc[j,'RightOUT']*2
+      Response = finalResults.loc[j,'LeftResponse']+finalResults.loc[j,'RightResponse']*2 # 0 = none, 1 = rightResponse, 2 = lefResponse, 3 = both
+      data = {'ID': [finalResults.loc[j,'ID']],
+              'Frekvens': [finalResults.loc[j,'Frekvens']],
               'Out': [Out],
               'Response': [Response],
-              'AnswerTime': [Re.loc[j,'AnswerTime']]}
+              'AnswerTime': [finalResults.loc[j,'AnswerTime']],
+              'Gender': Gender,
+              'Age': Age,
+              'HearingLoss': HearingLoss,
+              'HeadphoneTime': HeadphoneTime,
+              }
       df = pd.DataFrame(data)
       #append data frame to CSV file
       df.to_csv('Data\editResultStorage.csv', mode='a', index=False, header=False)
@@ -42,5 +55,5 @@ def testSaveData(ID, FrequencyPlayed, earPlayed, Answer, AnswerTime):
 
 def Clear_Data():
   f = open("Data\editResultStorage.csv","w")
-  f.write("ID,Frekvens,Out,Response,AnswerTime\n")
+  f.write("ID,Frekvens,Out,Response,AnswerTime,Gender,Age,HearingLoss,HeadphoneTime\n")
   f.close()

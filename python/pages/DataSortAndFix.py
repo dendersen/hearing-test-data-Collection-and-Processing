@@ -20,7 +20,7 @@ def st_capture(output_func):
         yield
 
 st.title('Check Data')
-Data = st.text_input('Data to be read: example Data\TempOccupied.csv')
+Data = st.text_input('Data to be read: example Data\editResultStorage.csv')
 if Data:
   dtf = pd.read_csv(Data)
   st.write(dtf.head())
@@ -69,11 +69,11 @@ if predict:
   output = st.empty()
   with st_capture(output.code):
     data_preprocessing(dtf, y="Y")
-  dtf_train, dtf_test = dtf_partitioning(dtf, y="Y", test_size=0.2, shuffle=False)
+  dtf_train, dtf_test = dtf_partitioning(dtf, y="Y", test_size=0.1, shuffle=False)
   #We show what we just did abowe^
   output = st.empty()
   with st_capture(output.code):
-    dtf_partitioning(dtf, y="Y", test_size=0.2, shuffle=False)
+    dtf_partitioning(dtf, y="Y", test_size=0.1, shuffle=False)
   #Show training data
   st.write('Training data is:')
   st.write(dtf_train.head(3))

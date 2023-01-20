@@ -157,7 +157,7 @@ if option == "Not binary":
   IdData = pd.read_csv('Data\ID_collection.csv')
   st.write(np.unique(y_test))
   #We store labels
-  label_names = np.unique(IdData['Age'])
+  label_names = np.unique(y_test)
   #We make the model:
   # Set random seed
   tf.random.set_seed(19)
@@ -241,7 +241,7 @@ if option == "Not binary":
     ColorList = colorGenerator(100)
     print(ColorList)
     for i in range(len(X_test)):
-      plt.scatter(x=X_test[i][0],y=X_test[i][1],c=ColorList[label_names[tf.argmax(y_prob[i])]])
+      plt.scatter(x=X_test[i][0],y=X_test[i][1],c=ColorList[tf.argmax(y_prob[i])])
     st.pyplot(plt.show())
     # show model parameters
     if NFeatures == 2:

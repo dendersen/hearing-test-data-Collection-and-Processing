@@ -853,10 +853,10 @@ def colorGenerator(numberOfColors:int):
   posibleCombinations+=255#red up
   posibleCombinations+=255#blue down
   
-  colors = []
+  colors = ["#ff0000"]
   rgbd:list[int] = [255,0,0,2]
-  for i in range(0,numberOfColors):
-    rgbd = split(rgbd[0],rgbd[1],rgbd[2],rgbd[3],posibleCombinations//numberOfColors)
+  for i in range(0,numberOfColors-1):
+    rgbd = split(rgbd[0],rgbd[1],rgbd[2],rgbd[3],posibleCombinations//(numberOfColors-1))
     try:
       r:str=hex(rgbd[0]).replace("0x","")
       g:str=hex(rgbd[1]).replace("0x","")
@@ -919,3 +919,5 @@ def split(r:int,g:int,b:int,direction:int,difference:int):
       direction=0
     return [r,g,b,direction]
   return [r,g,b,direction]
+
+print(colorGenerator(10))

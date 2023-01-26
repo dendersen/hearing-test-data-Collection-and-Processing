@@ -34,6 +34,6 @@ ID,Gender,Age,HearingLoss,HeadphoneTime,PlaceOfTest,Name
 32,1,47,1,1,David home,tina
 33,0,50,0,0,David home,Michael
 34,0,78,0,1,leif Home,Leif 
-35,1,71,1,0,Own House,Marja
+35,1,71,1,0,leif House,Marja
 36,1,73,0,0,Lisa Home,Lisa
 37,0,75,0,0,Lisa Home,Torben Bech 

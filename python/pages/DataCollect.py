@@ -40,7 +40,7 @@ st.title('The bedst hearing test online:')
 
 col1, col2 = st.columns(2) #Splits the screan into two halves
 with col1:
-  st.header('Indput data here')
+  st.header('Indput user data')
   
   Name = st.text_input('Name')
   Gender = st.selectbox('Gender',('Man','Woman'))

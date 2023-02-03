@@ -26,6 +26,7 @@ if whatToShow == 'Over all stats':
   
   #plot of frequency and how many test we have with it 
   fig, ax = plt.subplots(ncols=1,nrows=1)
+  #we count how many times a specific frequency is used and sort it
   freaquenzyCount = data1['Frekvens'].value_counts().sort_index()
   ax.plot(listOfFreaquency[0:],freaquenzyCount[freaquenzyCount.index[0]:])
   ax.set_title('Amount of test at given frequency')
@@ -98,7 +99,7 @@ else:
   st.write(f'<h1 style="color:#00FF00;font-size:18px;">{"Green = Sound in right ear (2)"}</h1>', unsafe_allow_html=True)
   st.write(f'<h1 style="color:#FF0000;font-size:18px;">{"Red = both ears heard the sound (3)"}</h1>', unsafe_allow_html=True)
   colorList = ['blue','orange','darkgreen','red']
-  
+  #we limit the data based on ear and id
   dff = data1[data1['ID'] == idChosen]  
   dfff = dff[dff['Out'] == earList.index(earChosen)]
   

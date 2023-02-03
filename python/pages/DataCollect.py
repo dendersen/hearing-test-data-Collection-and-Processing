@@ -23,6 +23,7 @@ def save_data():
     H = '0'
   else:
     H = '1'
+  #we create a dataframe we want to save
   data = {'ID': [newID],
           'Gender': [G],
           'Age': [Age],
@@ -30,8 +31,6 @@ def save_data():
           'HeadphoneTime': [HeadphoneTime],
           'PlaceOfTest': [PlaceOfTest],
           'Name': [Name],}
-  
-  
   df = pd.DataFrame(data)
   #we can now append the data to the csv-file
   df.to_csv('Data\ID_collection.csv', mode='a', index=False, header=False)

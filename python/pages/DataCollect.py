@@ -33,6 +33,7 @@ def save_data():
   
   
   df = pd.DataFrame(data)
+  #we can now append the data to the csv-file
   df.to_csv('Data\ID_collection.csv', mode='a', index=False, header=False)
   return newID
 
@@ -41,7 +42,7 @@ st.title('The bedst hearing test online:')
 col1, col2 = st.columns(2) #Splits the screan into two halves
 with col1:
   st.header('Indput data here')
-  
+  #User values are given so they can be saved
   Name = st.text_input('Name')
   Gender = st.selectbox('Gender',('Man','Woman'))
   Age = st.number_input('Age',min_value=0,max_value=150)

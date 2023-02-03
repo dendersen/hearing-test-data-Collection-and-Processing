@@ -28,10 +28,11 @@ def Change_Dataform():
       Age:int = idInformationOfSpecificID['Age'].values
       HearingLoss = idInformationOfSpecificID['HearingLoss'].values
       HeadphoneTime = idInformationOfSpecificID['HeadphoneTime'].values
-      
+      # 0 = none, 1 = leftResponse, 2 = rightResponse, 3 = both
       Out = finalResults.loc[j,'LeftOUT']+finalResults.loc[j,'RightOUT']*2
       Response = finalResults.loc[j,'LeftResponse']+finalResults.loc[j,'RightResponse']*2 # 0 = none, 1 = leftResponse, 2 = rightResponse, 3 = both
       leftCorrect,rightCorrect = responseCheck(Response,Out)
+      # we make two list that say if ear response was correct, 0 = false, 1 = true
       data = {'ID': [finalResults.loc[j,'ID']],
               'Frekvens': [finalResults.loc[j,'Frekvens']],
               'Out': [Out],

@@ -23,6 +23,7 @@ def save_data():
     H = '0'
   else:
     H = '1'
+  #we create a dataframe we want to save
   data = {'ID': [newID],
           'Gender': [G],
           'Age': [Age],
@@ -30,9 +31,8 @@ def save_data():
           'HeadphoneTime': [HeadphoneTime],
           'PlaceOfTest': [PlaceOfTest],
           'Name': [Name],}
-  
-  
   df = pd.DataFrame(data)
+  #we can now append the data to the csv-file
   df.to_csv('Data\ID_collection.csv', mode='a', index=False, header=False)
   return newID
 
@@ -42,6 +42,7 @@ col1, col2 = st.columns(2) #Splits the screan into two halves
 with col1:
   st.header('Indput data here')
   
+  #User values are given so that they can be saved
   Name = st.text_input('Name')
   Gender = st.selectbox('Gender',('Man','Woman'))
   Age = st.number_input('Age',min_value=0,max_value=150)

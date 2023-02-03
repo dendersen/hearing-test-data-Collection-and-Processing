@@ -99,6 +99,7 @@ else:
   st.write(f'<h1 style="color:#FF0000;font-size:18px;">{"Red = both ears heard the sound (3)"}</h1>', unsafe_allow_html=True)
   colorList = ['blue','orange','darkgreen','red']
   
+  #we limit the data based on ear and id
   dff = data1[data1['ID'] == idChosen]  
   dfff = dff[dff['Out'] == earList.index(earChosen)]
   

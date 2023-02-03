@@ -34,16 +34,17 @@ import shap
 ###############################################################################
 #                       DATA ANALYSIS                                         #
 ###############################################################################
-'''
-Recognize whether a column is numerical or categorical.
-:parameter
-    :param dtf: dataframe - input data
-    :param col: str - name of the column to analyze
-    :param max_cat: num - max number of unique values to recognize a column as categorical
-:return
-    "cat" if the column is categorical, "dt" if datetime, "num" otherwise
-'''
-def utils_recognize_type(dtf, col, max_cat=20):
+
+def utils_recognize_type(dtf, col, max_cat=100):
+    '''
+    Recognize whether a column is numerical or categorical.
+    :parameter
+        :param dtf: dataframe - input data
+        :param col: str - name of the column to analyze
+        :param max_cat: num - max number of unique values to recognize a column as categorical
+    :return
+        "cat" if the column is categorical, "dt" if datetime, "num" otherwise
+    '''
     if (dtf[col].dtype == "O") | (dtf[col].nunique() < max_cat):
         return "cat"
     elif dtf[col].dtype in ['datetime64[ns]','<M8[ns]']:
@@ -51,13 +52,14 @@ def utils_recognize_type(dtf, col, max_cat=20):
     else:
         return "num"
 
-'''
-Get a general overview of a dataframe.
-:parameter
-    :param dtf: dataframe - input data
-    :param max_cat: num - mininum number of recognize column type
-'''
+
 def dtf_overview(dtf, max_cat=20, figsize=(10,5)):
+    '''
+    Get a general overview of a dataframe.
+    :parameter
+        :param dtf: dataframe - input data
+        :param max_cat: num - mininum number of recognize column type
+    '''
     ## recognize column type
     dic_cols = {col:utils_recognize_type(dtf, col, max_cat=max_cat) for col in dtf.columns}
         
@@ -87,23 +89,22 @@ def dtf_overview(dtf, max_cat=20, figsize=(10,5)):
         else:
             heatmap[k] = heatmap[k].apply(lambda x: 0 if x is False else 1)
     sns.heatmap(heatmap, vmin=0, vmax=1, cbar=False, ax=ax).set_title('Dataset Overview')
-    #plt.setp(plt.xticks()[1], rotation=0)
     plt.show()
     
     ## add legend
     print("\033[1;37;40m Categerocial \033[m", "\033[1;30;41m Numerical/DateTime \033[m", "\033[1;30;47m NaN \033[m")
 
 
-'''
-Moves columns into a dtf.
-:parameter
-    :param dtf: dataframe - input data
-    :param lst_cols: list - names of the columns that must be moved
-    :param where: str - "front" or "end"
-:return
-    dtf with moved columns
-'''
 def pop_columns(dtf, lst_cols, where="front"):
+    '''
+    Moves columns into a dtf.
+    :parameter
+        :param dtf: dataframe - input data
+        :param lst_cols: list - names of the columns that must be moved
+        :param where: str - "front" or "end"
+    :return
+        dtf with moved columns
+    '''
     current_cols = dtf.columns.tolist()
     for col in lst_cols:    
         current_cols.pop( current_cols.index(col) )
@@ -113,22 +114,20 @@ def pop_columns(dtf, lst_cols, where="front"):
         dtf = dtf[current_cols + lst_cols]
     return dtf
 
-
-
-'''
-Plots the frequency distribution of a dtf column.
-:parameter
-    :param dtf: dataframe - input data
-    :param x: str - column name
-    :param max_cat: num - max number of uniques to consider a numerical variable as categorical
-    :param top: num - plot setting
-    :param show_perc: logic - plot setting
-    :param bins: num - plot setting
-    :param quantile_breaks: tuple - plot distribution between these quantiles (to exclude outilers)
-    :param box_logscale: logic
-    :param figsize: tuple - plot settings
-'''
 def freqdist_plot(dtf, x, max_cat=20, top=None, show_perc=True, bins=100, quantile_breaks=(0,10), box_logscale=False, figsize=(10,5)):
+    '''
+    Plots the frequency distribution of a dtf column.
+    :parameter
+        :param dtf: dataframe - input data
+        :param x: str - column name
+        :param max_cat: num - max number of uniques to consider a numerical variable as categorical
+        :param top: num - plot setting
+        :param show_perc: logic - plot setting
+        :param bins: num - plot setting
+        :param quantile_breaks: tuple - plot distribution between these quantiles (to exclude outilers)
+        :param box_logscale: logic
+        :param figsize: tuple - plot settings
+    '''
     try:
         ## cat --> freq
         if utils_recognize_type(dtf, x, max_cat) == "cat":   

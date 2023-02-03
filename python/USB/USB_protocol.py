@@ -5,7 +5,7 @@ import codecs
 
 
 ser = serial.Serial( 
-        port='COM4', #COM4
+        port='COM3', #COM4
         baudrate = 9600,
         parity=serial.PARITY_NONE,
         stopbits=serial.STOPBITS_ONE,
